@@ -1,0 +1,17 @@
+{
+    "name": "Иван",
+    "surname": "Иванов",
+    "patronymic": "Иванович",
+    "dob": "2022-07-10T00:00:00.000Z",
+    "сhildren": [],
+    "documentIds": [],
+    "passport": [],
+    "livingAddress": [],
+    "regAddress": [],
+    "jobs": [],
+    "curWorkExp": 0,
+    "typeEducation": "secondary",
+    "monIncome": 55.55,
+    "monExpenses": 55.55,
+    "communications": []
+  }
