@@ -3,11 +3,11 @@ import { Client } from "./client.table";
 import tables from "./config";
 
 export interface AddressNewCreationAttr {
-    id: number;
+    id?: number;
 
-    name: string;
+    name?: string;
 
-    clientId:number,    
+    clientId?:number,    
 
 }
 

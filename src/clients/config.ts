@@ -1,4 +1,4 @@
-const key = '005'
+const key = '006'
 
 const tables = {
     passport:'passport' + key,

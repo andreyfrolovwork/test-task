@@ -7,12 +7,13 @@ import { Passport } from "./passport.table";
 import { Child } from "./child.table";
 import { Job } from "./job.table";
 import { LivingAdress } from "./livingAddress.table";
+import { AddressNew } from "./test.table";
 
 @Module({
     controllers:[ClientController],
     providers:[ClientService],
     imports: [
-        SequelizeModule.forFeature([Client,Passport, Child, Job, LivingAdress])
+        SequelizeModule.forFeature([Client,Passport, Child, Job, AddressNew])
     ]
 })
 export class ClientModule {}

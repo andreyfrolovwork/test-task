@@ -1,9 +1,10 @@
-import { Column, DataType, HasMany, HasOne, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
 import { Passport } from "./passport.table";
 import { Child } from "./child.table";
 import { Job } from "./job.table";
 import { LivingAdress } from "./livingAddress.table";
 import tables from "./config";
+import { AddressNew } from "./test.table";
 
 interface ClientCreationAttr {
     id: number;
@@ -42,7 +43,7 @@ interface ClientCreationAttr {
 
 }
 
-@Table({ tableName: tables.client, paranoid:true, deletedAt: 'destroyTime' })
+@Table({ tableName: tables.client, paranoid: true, deletedAt: 'destroyTime' })
 export class Client extends Model<Client, ClientCreationAttr> {
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
@@ -69,7 +70,7 @@ export class Client extends Model<Client, ClientCreationAttr> {
     // documentIds: Array<number>;
 
 
-    
+
     // @Column({ type: DataType.INTEGER, allowNull: true })
     // passport: number;
 
@@ -105,10 +106,17 @@ export class Client extends Model<Client, ClientCreationAttr> {
 
     @HasMany(() => Child)
     children: Child[];
-    
+
     @HasMany(() => Job)
     jobs: Job[];
 
-    @HasOne(() => LivingAdress)
-    livingAdress: LivingAdress;
+    // @HasOne(() => LivingAdress)
+    // livingAdress: LivingAdress;
+
+    @ForeignKey(() => AddressNew)
+    @Column({ type: DataType.INTEGER })
+    livingAddressId: number;
+
+    @BelongsTo(() => AddressNew)
+    livingAddress: AddressNew
 }

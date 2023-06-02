@@ -7,6 +7,7 @@ import { Child } from "./child.table";
 import { Job } from "./job.table";
 import { Model } from "sequelize-typescript";
 import { LivingAdress } from "./livingAddress.table";
+import { AddressNew } from "./test.table";
 
 
 @Injectable()
@@ -16,9 +17,31 @@ export class ClientService {
         @InjectModel(Passport) private passportRepo: typeof Passport,
         @InjectModel(Child) private childRepo: typeof Child,
         @InjectModel(Job) private jobRepo: typeof Job,
-        @InjectModel(LivingAdress) private livingAdressRepo: typeof LivingAdress
+        @InjectModel(AddressNew) private addressNewRepo: typeof AddressNew
+        //@InjectModel(LivingAdress) private livingAdressRepo: typeof LivingAdress
     ) { }
 
+    async test(){
+        const updatedUser = await this.clientRepo.findByPk(1, {
+            include: [this.passportRepo, this.childRepo, this.jobRepo,this.addressNewRepo]
+        })
+
+        updatedUser.set({
+            livingAddressId:6
+        })
+
+        await updatedUser.save()
+
+        const updatedUser2 = await this.clientRepo.findByPk(1, {
+            include: [this.passportRepo, this.childRepo, this.jobRepo,this.addressNewRepo]
+        })
+
+        // await this.addressNewRepo.create({
+        //     name:'name address new'
+        // })
+        // return this.addressNewRepo.findAll()
+        return updatedUser2
+    }
     async createClient(dto: CreateClientDto) {
         const user = await this.clientRepo.create(dto, {
             include: this.passportRepo
@@ -37,10 +60,11 @@ export class ClientService {
             passportRepo: this.passportRepo,
             childRepo: this.childRepo,
             jobRepo: this.jobRepo,
-            livingAdressRepo: this.livingAdressRepo
+            //livingAdressRepo: this.livingAdressRepo
+            addressNewRepo: this.addressNewRepo
         }
         const user = await this.clientRepo.findByPk(clientDto.id, {
-            include: [this.passportRepo, this.childRepo, this.jobRepo]
+            include: [this.passportRepo, this.childRepo, this.jobRepo,this.addressNewRepo]
         })
 
         const propsDef = [
@@ -59,11 +83,16 @@ export class ClientService {
                 repo: 'passportRepo',
                 type:'one'
             },
-/*             {
+            {
                 propName: 'livingAddress',
-                repo: 'livingAdressRepo',
+                repo: 'addressNewRepo',
                 type:'one'
-            } */
+            }
+            // {
+            //     propName: 'livingAddress',
+            //     repo: 'livingAdressRepo',
+            //     type:'one'
+            // }
         ]
         const muiltiplePropsArray = [
             {
@@ -115,7 +144,7 @@ export class ClientService {
         await user.save()
 
         const updatedUser = await this.clientRepo.findByPk(clientDto.id, {
-            include: [this.passportRepo, this.childRepo, this.jobRepo, this.livingAdressRepo]
+            include: [this.passportRepo, this.childRepo, this.jobRepo,this.addressNewRepo]
         })
         return updatedUser
     }
