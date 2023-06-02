@@ -59,11 +59,11 @@ export class ClientService {
                 repo: 'passportRepo',
                 type:'one'
             },
-            {
+/*             {
                 propName: 'livingAddress',
                 repo: 'livingAdressRepo',
                 type:'one'
-            }
+            } */
         ]
         const muiltiplePropsArray = [
             {

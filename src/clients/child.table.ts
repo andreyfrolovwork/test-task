@@ -1,6 +1,7 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { User } from "src/users/users.table";
 import { Client } from "./client.table";
+import tables from "./config";
 
 export interface ChildCreationAttr {
     id: number;
@@ -17,7 +18,7 @@ export interface ChildCreationAttr {
 
 }
 
-@Table({ tableName: 'child', paranoid:true, deletedAt: 'destroyTime'  })
+@Table({ tableName: tables.child, paranoid:true, deletedAt: 'destroyTime'  })
 export class Child extends Model<Child, ChildCreationAttr> {
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })

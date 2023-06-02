@@ -1,8 +1,8 @@
-import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Client } from "./client.table";
 import tables from "./config";
 
-export interface LivingAddressCreationAttr {
+export interface AddressCreationAttr {
     id: number;
 
     zipCode: string;
@@ -23,7 +23,7 @@ export interface LivingAddressCreationAttr {
 }
 
 @Table({ tableName: tables.address, paranoid:true, deletedAt: 'destroyTime'  })
-export class LivingAdress extends Model<LivingAdress, LivingAddressCreationAttr> {
+export class Address extends Model<Address, AddressCreationAttr> {
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;
@@ -49,8 +49,11 @@ export class LivingAdress extends Model<LivingAdress, LivingAddressCreationAttr>
     @Column({ type: DataType.STRING, allowNull: true })
     apartment: string;
 
-    @ForeignKey(() => Client) 
-    @Column({type: DataType.INTEGER})
-    clientId: number;
+    // @ForeignKey(() => Client) 
+    // @Column({type: DataType.INTEGER})
+    // clientId: number;
+
+    // @HasMany(() => Address)
+    // factAddressId: Address[];
 
 }

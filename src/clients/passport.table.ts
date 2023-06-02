@@ -1,6 +1,7 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { User } from "src/users/users.table";
 import { Client } from "./client.table";
+import tables from "./config";
 
 export interface PassportCreationAttr {
     id: number;
@@ -15,7 +16,7 @@ export interface PassportCreationAttr {
 
 }
 
-@Table({ tableName: 'passport', paranoid:true, deletedAt: 'destroyTime'  })
+@Table({ tableName: tables.passport, paranoid:true, deletedAt: 'destroyTime'  })
 export class Passport extends Model<Passport, PassportCreationAttr> {
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })

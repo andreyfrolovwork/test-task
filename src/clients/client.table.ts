@@ -3,6 +3,7 @@ import { Passport } from "./passport.table";
 import { Child } from "./child.table";
 import { Job } from "./job.table";
 import { LivingAdress } from "./livingAddress.table";
+import tables from "./config";
 
 interface ClientCreationAttr {
     id: number;
@@ -41,7 +42,7 @@ interface ClientCreationAttr {
 
 }
 
-@Table({ tableName: 'client', paranoid:true, deletedAt: 'destroyTime' })
+@Table({ tableName: tables.client, paranoid:true, deletedAt: 'destroyTime' })
 export class Client extends Model<Client, ClientCreationAttr> {
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
