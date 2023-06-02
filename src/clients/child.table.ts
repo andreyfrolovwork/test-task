@@ -2,41 +2,43 @@ import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize
 import { User } from "src/users/users.table";
 import { Client } from "./client.table";
 
-export interface PassportCreationAttr {
+export interface ChildCreationAttr {
     id: number;
 
-    series: string;
+    name: string;
 
-    number: string;
+    surname: string;
 
-    giver: string;
+    patronymic: string;
 
-    dateIssued: Date;
+    dob: Date;
+
+    clientId:number,    
 
 }
 
-@Table({ tableName: 'passport', paranoid:true, deletedAt: 'destroyTime'  })
-export class Passport extends Model<Passport, PassportCreationAttr> {
+@Table({ tableName: 'child', paranoid:true, deletedAt: 'destroyTime'  })
+export class Child extends Model<Child, ChildCreationAttr> {
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;
 
     @Column({ type: DataType.STRING, allowNull: true })
-    series: string;
+    name: string;
 
     @Column({ type: DataType.STRING, allowNull: true })
-    number: string;
+    surname: string;
 
     @Column({ type: DataType.STRING, allowNull: true })
-    giver: string;
+    patronymic: string;
 
     @Column({ type: DataType.DATEONLY, allowNull: true })
-    dateIssued: Date;
+    dob: Date;
 
     @ForeignKey(() => Client) 
     @Column({type: DataType.INTEGER})
     clientId: number;
 
-    @BelongsTo(() => Client)
-    author: Client
+    // @BelongsTo(() => Client)
+    // author: Client
 }

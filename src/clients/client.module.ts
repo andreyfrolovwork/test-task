@@ -4,12 +4,14 @@ import { ClientService } from "./client.service";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { Client } from "./client.table";
 import { Passport } from "./passport.table";
+import { Child } from "./child.table";
+import { Job } from "./job.table";
 
 @Module({
     controllers:[ClientController],
     providers:[ClientService],
     imports: [
-        SequelizeModule.forFeature([Client,Passport])
+        SequelizeModule.forFeature([Client,Passport, Child, Job])
     ]
 })
 export class ClientModule {}

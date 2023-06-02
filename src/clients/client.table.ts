@@ -1,5 +1,7 @@
 import { Column, DataType, HasMany, HasOne, Model, Table } from "sequelize-typescript";
 import { Passport } from "./passport.table";
+import { Child } from "./child.table";
+import { Job } from "./job.table";
 
 interface ClientCreationAttr {
     id: number;
@@ -38,7 +40,7 @@ interface ClientCreationAttr {
 
 }
 
-@Table({ tableName: 'clients12' })
+@Table({ tableName: 'client', paranoid:true, deletedAt: 'destroyTime' })
 export class Client extends Model<Client, ClientCreationAttr> {
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
@@ -98,4 +100,10 @@ export class Client extends Model<Client, ClientCreationAttr> {
 
     @HasOne(() => Passport)
     passport: Passport;
+
+    @HasMany(() => Child)
+    children: Child[];
+    
+    @HasMany(() => Job)
+    jobs: Job[];
 }

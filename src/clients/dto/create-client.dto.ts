@@ -1,3 +1,4 @@
+import { ChildCreationAttr } from "../child.table";
 import { PassportCreationAttr } from "../passport.table";
 
 export class CreateClientDto {   
@@ -11,7 +12,7 @@ export class CreateClientDto {
 
     readonly dob: Date;
 
-    readonly children: Array<number>;
+    readonly children: Array<ChildCreationAttr>;
 
     readonly documentIds: Array<number>;
 
