@@ -16,7 +16,7 @@ export class CreateClientDto {
 
     readonly documentIds: Array<number>;
 
-    readonly passport: PassportCreationAttr;
+    readonly passport?: PassportCreationAttr;
 
     readonly livingAddress: number;
 

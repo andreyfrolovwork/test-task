@@ -2,6 +2,7 @@ import { Column, DataType, HasMany, HasOne, Model, Table } from "sequelize-types
 import { Passport } from "./passport.table";
 import { Child } from "./child.table";
 import { Job } from "./job.table";
+import { LivingAdress } from "./livingAddress.table";
 
 interface ClientCreationAttr {
     id: number;
@@ -106,4 +107,7 @@ export class Client extends Model<Client, ClientCreationAttr> {
     
     @HasMany(() => Job)
     jobs: Job[];
+
+    @HasOne(() => LivingAdress)
+    livingAdress: LivingAdress;
 }
