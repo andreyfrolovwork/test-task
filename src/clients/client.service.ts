@@ -7,7 +7,7 @@ import { Child } from "./child.table";
 import { Job } from "./job.table";
 import { Model } from "sequelize-typescript";
 import { LivingAdress } from "./livingAddress.table";
-import { AddressNew } from "./test.table";
+import { AddressNew } from "./address.table";
 
 
 @Injectable()
@@ -22,56 +22,56 @@ export class ClientService {
     ) { }
 
     async test(dto: CreateClientDto) {
-   /*      const repos = {
-            passportRepo: this.passportRepo,
-            childRepo: this.childRepo,
-            jobRepo: this.jobRepo,
-            //livingAdressRepo: this.livingAdressRepo
-            addressNewRepo: this.addressNewRepo
-        }
-        const props = {
-            propName: 'livingAddress',
-            repo: 'addressNewRepo',
-            type: 'one'
-        }
-        const user = await this.clientRepo.findByPk(dto.id, {
-            include: [this.passportRepo, this.childRepo, this.jobRepo, this.addressNewRepo]
-        })
+        /*      const repos = {
+                 passportRepo: this.passportRepo,
+                 childRepo: this.childRepo,
+                 jobRepo: this.jobRepo,
+                 //livingAdressRepo: this.livingAdressRepo
+                 addressNewRepo: this.addressNewRepo
+             }
+             const props = {
+                 propName: 'livingAddress',
+                 repo: 'addressNewRepo',
+                 type: 'one'
+             }
+             const user = await this.clientRepo.findByPk(dto.id, {
+                 include: [this.passportRepo, this.childRepo, this.jobRepo, this.addressNewRepo]
+             })
+     
+     
+             //await user.save()
+     
+             if (dto[props.propName] === null) {
+                 user[props.propName + 'Id'] = null
+                 await user.save()
+             } else if (user[props.propName + 'Id'] !== null &&
+                 dto[props.propName] !== undefined &&
+                 (typeof dto[props.propName] === 'object')) {
+                 // patch
+                 await repos[props.repo].findByPk(user[props.propName + 'Id'])
+                     .then((model) => {
+                         const modelData = {
+                             ...dto[props.propName]
+                         };
+                         delete modelData.id
+                         model.set(modelData)
+                         return model.save()
+                     })
+     
+             } else if (user[props.propName + 'Id'] === null &&
+                 dto[props.propName] !== undefined &&
+                 (typeof dto[props.propName] === 'object')) {
+                 //create
+                 const modelData = {
+                     ...dto[props.propName]
+                 };
+                 delete modelData.id
+                 const newAdress = await repos[props.repo].create(modelData)
+                 user[props.propName + 'Id'] = newAdress.id
+                 await user.save()
+             }
+      */
 
-
-        //await user.save()
-
-        if (dto[props.propName] === null) {
-            user[props.propName + 'Id'] = null
-            await user.save()
-        } else if (user[props.propName + 'Id'] !== null &&
-            dto[props.propName] !== undefined &&
-            (typeof dto[props.propName] === 'object')) {
-            // patch
-            await repos[props.repo].findByPk(user[props.propName + 'Id'])
-                .then((model) => {
-                    const modelData = {
-                        ...dto[props.propName]
-                    };
-                    delete modelData.id
-                    model.set(modelData)
-                    return model.save()
-                })
-
-        } else if (user[props.propName + 'Id'] === null &&
-            dto[props.propName] !== undefined &&
-            (typeof dto[props.propName] === 'object')) {
-            //create
-            const modelData = {
-                ...dto[props.propName]
-            };
-            delete modelData.id
-            const newAdress = await repos[props.repo].create(modelData)
-            user[props.propName + 'Id'] = newAdress.id
-            await user.save()
-        }
- */
-      
         const updatedUser3 = await this.clientRepo.findByPk(1, {
             include: {
                 all: true
@@ -79,16 +79,16 @@ export class ClientService {
         })
 
         const ad1 = await this.addressNewRepo.create({
-                name:'ad1'
+            country: 'ad1'
         })
 
         const ad2 = await this.addressNewRepo.create({
-                name:'ad2'
+            country: 'ad2'
         })
-/* 
-        updatedUser3.regAddressId = ad1.id
-        updatedUser3.livingAddressId = ad2.id
- */
+        /* 
+                updatedUser3.regAddressId = ad1.id
+                updatedUser3.livingAddressId = ad2.id
+         */
         await updatedUser3.save()
 
         const updatedUser4 = await this.clientRepo.findByPk(1, {
@@ -123,12 +123,12 @@ export class ClientService {
         }
         const user = await this.clientRepo.findByPk(clientDto.id, {
             //include: [this.passportRepo, this.childRepo, this.jobRepo, this.addressNewRepo]
-            include:{
-                all:true
+            include: {
+                all: true
             }
         })
 
-        if(!user) {
+        if (!user) {
             throw new HttpException('Такого клиента не существует', HttpStatus.NOT_FOUND)
         }
 
@@ -143,11 +143,11 @@ export class ClientService {
                 repo: 'jobRepo',
                 type: 'array'
             },
-            // {
-            //     propName: 'passport',
-            //     repo: 'passportRepo',
-            //     type: 'one'
-            // },
+            {
+                propName: 'passport',
+                repo: 'passportRepo',
+                type: 'one'
+            },
             {
                 propName: 'livingAddress',
                 repo: 'addressNewRepo',
@@ -156,7 +156,7 @@ export class ClientService {
             {
                 propName: 'regAddress',
                 repo: 'addressNewRepo',
-                type:'one'
+                type: 'one'
             }
         ]
         function updateSubModels(model: Model, muiltiplePropsArray: multiArr[], clientDto, repos) {
@@ -181,8 +181,8 @@ export class ClientService {
 
         const updatedUser = await this.clientRepo.findByPk(clientDto.id, {
             //include: [this.passportRepo, this.childRepo, this.jobRepo, this.addressNewRepo]
-            include:{
-                all:true
+            include: {
+                all: true
             }
         })
         return updatedUser
@@ -297,7 +297,7 @@ function updateOnePropCallBack2(model: Model, propsArr: multiArr[], clientDto, r
             model[propElement.propName + 'Id'] === null &&
             clientDto[propElement.propName] !== undefined &&
             (typeof clientDto[propElement.propName] === 'object')
-            ) {
+        ) {
             //create
             const modelData = {
                 ...clientDto[propElement.propName]

@@ -1,31 +1,32 @@
-import {  Column, DataType, Model, Table } from "sequelize-typescript";
+import { Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import { Client } from "./client.table";
 import tables from "./config";
 
-export interface AddressNewCreationAttr {
-    id?: number;
+export interface AddressCreationAttr {
+    id: number;
 
-    zipCode?: string;
+    zipCode: string;
 
-    country?: string;
+    country: string;
     
-    region?: string;
+    region: string;
 
-    city?: string;
+    city: string;
 
-    street?: string;
+    street: string;
 
-    house?: string;
+    house: string;
 
-    apartment?: string;
+    apartment: string;
 
+    clientId: number;
 }
 
-@Table({ tableName: tables.testAddress, paranoid:true, deletedAt: 'destroyTime'  })
-export class AddressNew extends Model<AddressNew, AddressNewCreationAttr> {
+@Table({ tableName: tables.address, paranoid:true, deletedAt: 'destroyTime'  })
+export class Address extends Model<Address, AddressCreationAttr> {
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;
-
 
     @Column({ type: DataType.STRING, allowNull: true })
     zipCode: string;

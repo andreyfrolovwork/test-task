@@ -9,7 +9,7 @@ import { Passport } from "./clients/passport.table";
 import { Child } from "./clients/child.table";
 import { Job } from "./clients/job.table";
 import { LivingAdress } from "./clients/livingAddress.table";
-import { AddressNew } from "./clients/test.table";
+import { AddressNew } from "./clients/address.table";
 @Module({
     controllers: [],
     providers: [],

@@ -1,20 +1,19 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
-import { User } from "src/users/users.table";
+import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Client } from "./client.table";
 import tables from "./config";
 
 export interface ChildCreationAttr {
-    id: number;
+    id?: number;
 
-    name: string;
+    name?: string;
 
-    surname: string;
+    surname?: string;
 
-    patronymic: string;
+    patronymic?: string;
 
-    dob: Date;
+    dob?: Date;
 
-    clientId:number,    
+    clientId?:number,    
 
 }
 
@@ -40,6 +39,4 @@ export class Child extends Model<Child, ChildCreationAttr> {
     @Column({type: DataType.INTEGER})
     clientId: number;
 
-    // @BelongsTo(() => Client)
-    // author: Client
 }

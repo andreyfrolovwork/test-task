@@ -7,7 +7,7 @@ import { Passport } from "./passport.table";
 import { Child } from "./child.table";
 import { Job } from "./job.table";
 import { LivingAdress } from "./livingAddress.table";
-import { AddressNew } from "./test.table";
+import { AddressNew } from "./address.table";
 
 @Module({
     controllers:[ClientController],

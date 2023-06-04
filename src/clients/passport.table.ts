@@ -34,10 +34,10 @@ export class Passport extends Model<Passport, PassportCreationAttr> {
     @Column({ type: DataType.DATEONLY, allowNull: true })
     dateIssued: Date;
 
-    @ForeignKey(() => Client) 
+/*     @ForeignKey(() => Client) 
     @Column({type: DataType.INTEGER})
     clientId: number;
 
     @BelongsTo(() => Client)
-    author: Client
+    author: Client */
 }

@@ -4,7 +4,7 @@ import { Child } from "./child.table";
 import { Job } from "./job.table";
 import { LivingAdress } from "./livingAddress.table";
 import tables from "./config";
-import { AddressNew } from "./test.table";
+import { AddressNew } from "./address.table";
 
 interface ClientCreationAttr {
     id: number;
@@ -52,39 +52,37 @@ export class Client extends Model<Client, ClientCreationAttr> {
     @Column({ type: DataType.STRING, allowNull: true })
     name: string;
 
-    /*     @Column({ type: DataType.STRING, allowNull: true })
-        surname: string;
-    
-        @Column({ type: DataType.STRING, allowNull: true })
-        patronymic: string;
-    
-        @Column({ type: DataType.DATEONLY, allowNull: true })
-        dob: Date;
-    
-        @Column({ type: DataType.STRING, defaultValue: 0, })
-        curWorkExp: number;
-    
-        @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'secondary' })
-        typeEducation: string;
-    
-        @Column({ type: DataType.STRING, defaultValue: 0, allowNull: true })
-        monIncome: number;
-    
-        @Column({ type: DataType.STRING,defaultValue: 0, allowNull: true })
-        monExpenses: number;
-    
-    
-        @Column({ type: DataType.INTEGER, allowNull: true, })
-        spouse: number;
-     */
-    /*    @HasOne(() => Passport)
-       passport: Passport;
-    */
-    /*     @HasMany(() => Child)
-        children: Child[]; */
+    @Column({ type: DataType.STRING, allowNull: true })
+    surname: string;
 
-    /*     @HasMany(() => Job)
-        jobs: Job[]; */
+    @Column({ type: DataType.STRING, allowNull: true })
+    patronymic: string;
+
+    @Column({ type: DataType.DATEONLY, allowNull: true })
+    dob: Date;
+
+    @Column({ type: DataType.STRING, defaultValue: 0, })
+    curWorkExp: number;
+
+    @Column({ 
+        type: DataType.ENUM, 
+        values:['secondary','secondarySpecial','incompleteHigher','higher','twoOrMoreHigher', 'academicDegree'], 
+        allowNull: true, 
+        //defaultValue: null 
+    })
+    typeEducation: string;
+
+    @Column({ type: DataType.STRING, defaultValue: 0, allowNull: true })
+    monIncome: number;
+
+    @Column({ type: DataType.STRING, defaultValue: 0, allowNull: true })
+    monExpenses: number;
+
+    @HasMany(() => Child)
+    children: Child[];
+
+    @HasMany(() => Job)
+    jobs: Job[];
 
     @ForeignKey(() => AddressNew)
     @Column({ type: DataType.INTEGER })
@@ -93,7 +91,6 @@ export class Client extends Model<Client, ClientCreationAttr> {
     @BelongsTo(() => AddressNew, { onDelete: "no action", foreignKey: "regAddressId" })
     regAddress: AddressNew
 
-
     @ForeignKey(() => AddressNew)
     @Column({ type: DataType.INTEGER })
     livingAddressId: number;
@@ -101,5 +98,13 @@ export class Client extends Model<Client, ClientCreationAttr> {
     @BelongsTo(() => AddressNew, { onDelete: "no action", foreignKey: "livingAddressId" })
     livingAddress: AddressNew
 
+    @ForeignKey(() => Passport)
+    @Column({ type: DataType.INTEGER })
+    passportId: number;
 
+    @BelongsTo(() => Passport)
+    passport: Passport
+
+    @Column({ type: DataType.INTEGER, allowNull: true, })
+    spouse: number;
 }
