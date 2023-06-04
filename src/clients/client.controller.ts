@@ -26,7 +26,7 @@ export class ClientController {
     }
 
     @Delete()
-    test(){
-        return this.clientService.test()
+    test(@Body() clientDto: CreateClientDto){
+        return this.clientService.test(clientDto)
     }
 }

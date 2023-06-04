@@ -1,6 +1,7 @@
-import {  Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import {  BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
 import { Client } from "./client.table";
 import tables from "./config";
+import { Passport } from "./passport.table";
 
 export interface AddressNewCreationAttr {
     id?: number;
@@ -20,9 +21,18 @@ export class AddressNew extends Model<AddressNew, AddressNewCreationAttr> {
     @Column({ type: DataType.STRING, allowNull: true })
     name: string;
 
+/*     @BelongsTo(() => Client)
+    client: Client;
+
+    @ForeignKey(() => Client)
+    CliendId:number; */
+    
+    // @HasMany(() => Client)
+    // client2: Client;
+
+
     // @ForeignKey(() => Client) 
     // @Column({type: DataType.INTEGER})
     // clientId: number;
-
 
 }

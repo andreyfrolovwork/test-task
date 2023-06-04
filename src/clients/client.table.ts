@@ -52,71 +52,54 @@ export class Client extends Model<Client, ClientCreationAttr> {
     @Column({ type: DataType.STRING, allowNull: true })
     name: string;
 
-    @Column({ type: DataType.STRING, allowNull: true })
-    surname: string;
+    /*     @Column({ type: DataType.STRING, allowNull: true })
+        surname: string;
+    
+        @Column({ type: DataType.STRING, allowNull: true })
+        patronymic: string;
+    
+        @Column({ type: DataType.DATEONLY, allowNull: true })
+        dob: Date;
+    
+        @Column({ type: DataType.STRING, defaultValue: 0, })
+        curWorkExp: number;
+    
+        @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'secondary' })
+        typeEducation: string;
+    
+        @Column({ type: DataType.STRING, defaultValue: 0, allowNull: true })
+        monIncome: number;
+    
+        @Column({ type: DataType.STRING,defaultValue: 0, allowNull: true })
+        monExpenses: number;
+    
+    
+        @Column({ type: DataType.INTEGER, allowNull: true, })
+        spouse: number;
+     */
+    /*    @HasOne(() => Passport)
+       passport: Passport;
+    */
+    /*     @HasMany(() => Child)
+        children: Child[]; */
 
-    @Column({ type: DataType.STRING, allowNull: true })
-    patronymic: string;
+    /*     @HasMany(() => Job)
+        jobs: Job[]; */
 
-    @Column({ type: DataType.DATEONLY, allowNull: true })
-    dob: Date;
+    @ForeignKey(() => AddressNew)
+    @Column({ type: DataType.INTEGER })
+    regAddressId: number;
 
+    @BelongsTo(() => AddressNew, { onDelete: "no action", foreignKey: "regAddressId" })
+    regAddress: AddressNew
 
-
-    // @Column({ type: DataType.ARRAY, allowNull: false, defaultValue: [] })
-    // children: Array<number>;
-
-    // @Column({ type: DataType.ARRAY, allowNull: false, defaultValue: [] })
-    // documentIds: Array<number>;
-
-
-
-    // @Column({ type: DataType.INTEGER, allowNull: true })
-    // passport: number;
-
-    // @Column({ type: DataType.INTEGER, allowNull: true })
-    // livingAddress: number;
-
-    // @Column({ type: DataType.INTEGER, allowNull: true })
-    // regAddress: number;
-
-    // @Column({ type: DataType.ARRAY, allowNull: false, defaultValue: [] })
-    // jobs: Array<number>;
-
-    @Column({ type: DataType.STRING, defaultValue: 0, })
-    curWorkExp: number;
-
-    @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'secondary' })
-    typeEducation: string;
-
-    @Column({ type: DataType.STRING, defaultValue: 0, allowNull: true })
-    monIncome: number;
-
-    @Column({ type: DataType.STRING, defaultValue: 0, allowNull: true })
-    monExpenses: number;
-
-    // @Column({ type: DataType.ARRAY, allowNull: false, defaultValue: [] })
-    // communications: Array<number>;
-
-    @Column({ type: DataType.INTEGER, allowNull: true, })
-    spouse: number;
-
-    @HasOne(() => Passport)
-    passport: Passport;
-
-    @HasMany(() => Child)
-    children: Child[];
-
-    @HasMany(() => Job)
-    jobs: Job[];
-
-    // @HasOne(() => LivingAdress)
-    // livingAdress: LivingAdress;
 
     @ForeignKey(() => AddressNew)
     @Column({ type: DataType.INTEGER })
     livingAddressId: number;
 
-    @BelongsTo(() => AddressNew)
+    @BelongsTo(() => AddressNew, { onDelete: "no action", foreignKey: "livingAddressId" })
     livingAddress: AddressNew
+
+
 }
