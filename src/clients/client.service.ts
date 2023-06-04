@@ -4,10 +4,10 @@ import { Client } from "./client.table";
 import { CreateClientDto } from "./dto/create-client.dto";
 import { Passport } from "./passport.table";
 import { Child } from "./child.table";
+import { Address } from "./address.table";
+import { Communication } from "./communication.table";
+import { update } from "src/shared/update";
 import { Job } from "./job.table";
-import { Model } from "sequelize-typescript";
-import { LivingAdress } from "./livingAddress.table";
-import { AddressNew } from "./address.table";
 
 
 @Injectable()
@@ -17,10 +17,35 @@ export class ClientService {
         @InjectModel(Passport) private passportRepo: typeof Passport,
         @InjectModel(Child) private childRepo: typeof Child,
         @InjectModel(Job) private jobRepo: typeof Job,
-        @InjectModel(AddressNew) private addressNewRepo: typeof AddressNew
-        //@InjectModel(LivingAdress) private livingAdressRepo: typeof LivingAdress
-    ) { }
+        @InjectModel(Address) private addressRepo: typeof Address,
+        @InjectModel(Communication) private comRepo: typeof Communication
 
+    ) { }
+        async put(){
+            const user = await this.clientRepo.findByPk(1, {
+                include: {
+                    all: true
+                }
+            })
+
+            
+     /*        user.set({
+                
+                communication: [
+                    //@ts-ignore
+                    {"type":"email", "value":"123"}
+                ]
+            }) */
+
+            await user.save()
+
+            const user2 = await this.clientRepo.findByPk(1, {
+                include: {
+                    all: true
+                }
+            })
+            return user2
+        }
     async test(dto: CreateClientDto) {
         /*      const repos = {
                  passportRepo: this.passportRepo,
@@ -78,11 +103,11 @@ export class ClientService {
             }
         })
 
-        const ad1 = await this.addressNewRepo.create({
+        const ad1 = await this.addressRepo.create({
             country: 'ad1'
         })
 
-        const ad2 = await this.addressNewRepo.create({
+        const ad2 = await this.addressRepo.create({
             country: 'ad2'
         })
         /* 
@@ -113,13 +138,13 @@ export class ClientService {
         })
         return usersWithPassports
     }
-    async changeClient(clientDto: CreateClientDto) {
+    async changeClient(clientDto: Client) {
         const repos = {
             passportRepo: this.passportRepo,
             childRepo: this.childRepo,
             jobRepo: this.jobRepo,
-            //livingAdressRepo: this.livingAdressRepo
-            addressNewRepo: this.addressNewRepo
+            addressRepo: this.addressRepo,
+            comRepo:this.comRepo
         }
         const user = await this.clientRepo.findByPk(clientDto.id, {
             //include: [this.passportRepo, this.childRepo, this.jobRepo, this.addressNewRepo]
@@ -144,38 +169,31 @@ export class ClientService {
                 type: 'array'
             },
             {
+                propName: 'communication',
+                repo: 'comRepo',
+                type: 'array'
+            },
+            {
                 propName: 'passport',
                 repo: 'passportRepo',
                 type: 'one'
             },
             {
                 propName: 'livingAddress',
-                repo: 'addressNewRepo',
+                repo: 'addressRepo',
                 type: 'one'
             },
             {
                 propName: 'regAddress',
-                repo: 'addressNewRepo',
+                repo: 'addressRepo',
                 type: 'one'
             }
         ]
-        function updateSubModels(model: Model, muiltiplePropsArray: multiArr[], clientDto, repos) {
-            return function (propsElement: multiArr) {
-                if (propsElement.type === 'array') {
-                    return updateSubModelArray(model, muiltiplePropsArray, clientDto, repos)(propsElement)
-                } else if (propsElement.type === 'one') {
-                    return updateOnePropCallBack2(user, muiltiplePropsArray, clientDto, repos)(propsElement)
-                }
-            }
-        }
 
-        async function update(model: Model, muiltiplePropsArray: multiArr[], clientDto, repos) {
-            await Promise.all(muiltiplePropsArray.map(updateSubModels(user, muiltiplePropsArray, clientDto, repos)))
 
-        }
 
         await update(user, propsDef, clientDto, repos)
-        //@ts-ignore
+       
         user.set(clientDto)
         await user.save()
 
@@ -187,130 +205,4 @@ export class ClientService {
         })
         return updatedUser
     }
-}
-
-interface multiArr {
-    propName: string;
-    repo: string,
-    type?: string
-}
-
-async function updateMulitipleProps(model: Model, muiltiplePropsArray: multiArr[], clientDto: CreateClientDto, repos) {
-    const arr = muiltiplePropsArray.map(updateSubModelArray(model, muiltiplePropsArray, clientDto, repos))
-    const result = await Promise.all(arr)
-}
-
-function updateSubModelArray(model: Model, muiltiplePropsArray: multiArr[], clientDto, repos): any {
-    return function (subModelPropElement: multiArr) {
-        if (clientDto[subModelPropElement.propName]) {
-            if (clientDto[subModelPropElement.propName] === null) {
-                return repos[subModelPropElement.repo].destroy({
-                    where: {
-                        clientId: clientDto.id
-                    }
-                });
-            } else if (clientDto[subModelPropElement.propName].length !== 0) {
-
-                const idsFromClient = clientDto[subModelPropElement.propName].map((subModel) => subModel.id)
-                const subModelIdArrayFromDatabase = model[subModelPropElement.propName].length ? model[subModelPropElement.propName].map((el) => el.id) : []
-                const arrayToDelete = subModelIdArrayFromDatabase.filter((idFromDb) => !idsFromClient.includes(idFromDb))
-
-                const deletePromises = arrayToDelete.map((id) => repos[subModelPropElement.repo].destroy({
-                    where: { id: id }
-                }))
-
-                const createPromises = clientDto[subModelPropElement.propName]
-                    .map(subModelUpdateOrCreateByid(subModelPropElement, repos, clientDto));
-
-                const allPromises = deletePromises.concat(createPromises)
-
-                return Promise.all(allPromises);
-            }
-        }
-    }
-}
-function subModelUpdateOrCreateByid(mPropArr, repos, clientDto) {
-    return function (subModel) {
-        if (!subModel.id) {
-            return repos[mPropArr.repo].create({
-                clientId: clientDto.id,
-                ...subModel
-            });
-        } else if (subModel.id) {
-            return repos[mPropArr.repo].findByPk(subModel.id)
-                .then((model) => {
-                    if (model) {
-                        model.set(subModel);
-                        return model.save();
-                    }
-                });
-
-        }
-    }
-}
-
-function updateOnePropCallBackOld(model: Model, propsArr: multiArr[], clientDto, repos) {
-    return function (propElement: multiArr) {
-
-
-        if (clientDto[propElement.propName] === null) {
-            return repos[propElement.repo].destroy({
-                where: {
-                    clientId: clientDto.id
-                }
-            })
-        } else if (clientDto[propElement.propName] && !clientDto[propElement.propName].hasOwnProperty('id')) {
-            return repos[propElement.repo].create({
-                ...clientDto[propElement.propName]
-            })
-        } else if (clientDto[propElement.propName] && clientDto[propElement.propName].hasOwnProperty('id')) {
-            model.set({
-                [propElement.propName]: {
-                    ...clientDto[propElement.propName]
-                }
-            })
-            return model.save()
-        }
-    }
-
-}
-function updateOnePropCallBack2(model: Model, propsArr: multiArr[], clientDto, repos) {
-    return function (propElement: multiArr) {
-        if (clientDto[propElement.propName] === null) {
-            model[propElement.propName + 'Id'] = null
-            return model.save()
-        } else if (model[propElement.propName + 'Id'] !== null &&
-            clientDto[propElement.propName] !== undefined &&
-            (typeof clientDto[propElement.propName] === 'object')) {
-            // patch
-            return repos[propElement.repo].findByPk(model[propElement.propName + 'Id'])
-                .then((model) => {
-                    const modelData = {
-                        ...clientDto[propElement.propName]
-                    };
-                    delete modelData.id
-                    model.set(modelData)
-                    return model.save()
-                })
-
-        } else if (
-            model[propElement.propName + 'Id'] === null &&
-            clientDto[propElement.propName] !== undefined &&
-            (typeof clientDto[propElement.propName] === 'object')
-        ) {
-            //create
-            const modelData = {
-                ...clientDto[propElement.propName]
-            };
-            delete modelData.id
-            return repos[propElement.repo]
-                .create(modelData)
-                .then((newAddress) => {
-                    model[propElement.propName + 'Id'] = newAddress.id
-                    return model.save()
-                })
-
-        }
-    }
-
 }

@@ -1,10 +1,10 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Passport } from "./passport.table";
 import { Child } from "./child.table";
-import { Job } from "./job.table";
-import { LivingAdress } from "./livingAddress.table";
+import { Address } from "./address.table";
+import { Communication } from "./communication.table";
 import tables from "./config";
-import { AddressNew } from "./address.table";
+import { Job } from "./job.table";
 
 interface ClientCreationAttr {
     id: number;
@@ -61,8 +61,38 @@ export class Client extends Model<Client, ClientCreationAttr> {
     @Column({ type: DataType.DATEONLY, allowNull: true })
     dob: Date;
 
+    @HasMany(() => Child)
+    children: Child[];
+
+    @Column({type:DataType.ARRAY(DataType.STRING)})
+    documentIds:Array<number|string>
+    
+    @ForeignKey(() => Passport)
+    @Column({ type: DataType.INTEGER })
+    passportId: number;
+
+    @BelongsTo(() => Passport)
+    passport: Passport
+
+    @ForeignKey(() => Address)
+    @Column({ type: DataType.INTEGER })
+    livingAddressId: number;
+
+    @BelongsTo(() => Address, { onDelete: "no action", foreignKey: "livingAddressId" })
+    livingAddress: Address
+
+    @ForeignKey(() => Address)
+    @Column({ type: DataType.INTEGER })
+    regAddressId: number;
+
+    @BelongsTo(() => Address, { onDelete: "no action", foreignKey: "regAddressId" })
+    regAddress: Address
+
+    @HasMany(() => Job)
+    jobs: Job[];
+
     @Column({ type: DataType.STRING, defaultValue: 0, })
-    curWorkExp: number;
+    readonly curWorkExp: number;
 
     @Column({ 
         type: DataType.ENUM, 
@@ -78,32 +108,8 @@ export class Client extends Model<Client, ClientCreationAttr> {
     @Column({ type: DataType.STRING, defaultValue: 0, allowNull: true })
     monExpenses: number;
 
-    @HasMany(() => Child)
-    children: Child[];
-
-    @HasMany(() => Job)
-    jobs: Job[];
-
-    @ForeignKey(() => AddressNew)
-    @Column({ type: DataType.INTEGER })
-    regAddressId: number;
-
-    @BelongsTo(() => AddressNew, { onDelete: "no action", foreignKey: "regAddressId" })
-    regAddress: AddressNew
-
-    @ForeignKey(() => AddressNew)
-    @Column({ type: DataType.INTEGER })
-    livingAddressId: number;
-
-    @BelongsTo(() => AddressNew, { onDelete: "no action", foreignKey: "livingAddressId" })
-    livingAddress: AddressNew
-
-    @ForeignKey(() => Passport)
-    @Column({ type: DataType.INTEGER })
-    passportId: number;
-
-    @BelongsTo(() => Passport)
-    passport: Passport
+    @HasMany(() => Communication)
+    communication:Communication[];
 
     @Column({ type: DataType.INTEGER, allowNull: true, })
     spouse: number;

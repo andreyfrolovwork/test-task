@@ -1,4 +1,4 @@
-const key = '10'
+const key = '2'
 
 const tables = {
     passport:'passport' + key,
@@ -6,7 +6,8 @@ const tables = {
     client:'client' + key,
     job:'job' + key,
     address:'address' + key,
-    testAddress:'testAdress' + key
+    testAddress:'testAdress' + key,
+    communication:'communication' + key
 }
 
 export default tables

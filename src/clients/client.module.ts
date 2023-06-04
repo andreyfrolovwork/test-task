@@ -5,15 +5,15 @@ import { SequelizeModule } from "@nestjs/sequelize";
 import { Client } from "./client.table";
 import { Passport } from "./passport.table";
 import { Child } from "./child.table";
+import { Address } from "./address.table";
+import { Communication } from "./communication.table";
 import { Job } from "./job.table";
-import { LivingAdress } from "./livingAddress.table";
-import { AddressNew } from "./address.table";
 
 @Module({
     controllers:[ClientController],
     providers:[ClientService],
     imports: [
-        SequelizeModule.forFeature([Client,Passport, Child, Job, AddressNew])
+        SequelizeModule.forFeature([Client,Passport, Child, Job, Address, Communication])
     ]
 })
 export class ClientModule {}

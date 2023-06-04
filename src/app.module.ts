@@ -7,9 +7,9 @@ import { Client } from "./clients/client.table";
 import { ClientModule } from "./clients/client.module";
 import { Passport } from "./clients/passport.table";
 import { Child } from "./clients/child.table";
+import { Address } from "./clients/address.table";
+import { Communication } from "./clients/communication.table";
 import { Job } from "./clients/job.table";
-import { LivingAdress } from "./clients/livingAddress.table";
-import { AddressNew } from "./clients/address.table";
 @Module({
     controllers: [],
     providers: [],
@@ -24,7 +24,7 @@ import { AddressNew } from "./clients/address.table";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRESS_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Client, Passport, Child, Job, AddressNew],
+            models: [User, Client, Passport, Child, Job, Address, Communication],
             autoLoadModels: true,
             synchronize:true,
             //force:true

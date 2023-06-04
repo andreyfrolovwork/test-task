@@ -1,7 +1,7 @@
 import {  Column, DataType, Model, Table } from "sequelize-typescript";
 import tables from "./config";
 
-export interface AddressNewCreationAttr {
+export interface AddressCreationAttr {
     id?: number;
 
     zipCode?: string;
@@ -21,7 +21,7 @@ export interface AddressNewCreationAttr {
 }
 
 @Table({ tableName: tables.testAddress, paranoid:true, deletedAt: 'destroyTime'  })
-export class AddressNew extends Model<AddressNew, AddressNewCreationAttr> {
+export class Address extends Model<Address, AddressCreationAttr> {
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;
