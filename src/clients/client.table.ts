@@ -1,4 +1,4 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, IsUUID, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { Passport } from "./passport.table";
 import { Child } from "./child.table";
 import { Address } from "./address.table";
@@ -17,19 +17,25 @@ interface ClientCreationAttr {
 
     dob: Date;
 
-    // children: Array<number>;
+    children: Child[];
 
-    // documentIds: Array<number>;
+    documentIds:Array<number|string>
+    
+    passportId: number;
 
-    // passport: number;
+    passport: Passport
 
-    // livingAddress: number;
+    livingAddressId: number;
 
-    // regAddress: number;
+    livingAddress: Address
 
-    // jobs: Array<number>;
+    regAddressId: number;
 
-    curWorkExp: number;
+    regAddress: Address
+
+    jobs: Job[];
+
+    readonly curWorkExp: number;
 
     typeEducation: string;
 
@@ -37,14 +43,18 @@ interface ClientCreationAttr {
 
     monExpenses: number;
 
-    // communications: Array<number>;
+    communication:Communication[];
 
     spouse: number;
-
 }
 
 @Table({ tableName: tables.client, paranoid: true, deletedAt: 'destroyTime' })
 export class Client extends Model<Client, ClientCreationAttr> {
+
+    // @IsUUID(4)
+    // @PrimaryKey
+    // @Column({unique:true})
+    // id: string;
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;

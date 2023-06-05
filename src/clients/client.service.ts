@@ -20,7 +20,20 @@ export class ClientService {
         @InjectModel(Address) private addressRepo: typeof Address,
         @InjectModel(Communication) private comRepo: typeof Communication
 
-    ) { }
+    ) {}
+
+        async getClientById(clientId:number){
+            const user = await this.clientRepo.findByPk(clientId, {
+                include: {
+                    all: true
+                }
+            })    
+            if (!user) {
+                throw new HttpException('Такого клиента не существует', HttpStatus.NOT_FOUND)
+            }
+            return user
+        }
+
         async put(){
             const user = await this.clientRepo.findByPk(1, {
                 include: {
@@ -125,6 +138,7 @@ export class ClientService {
         return updatedUser4
     }
     async createClient(dto: CreateClientDto) {
+        //@ts-ignore
         const user = await this.clientRepo.create(dto, /* {
             //include: this.passportRepo
             include: 'all'

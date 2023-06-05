@@ -1,6 +1,4 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
-import { User } from "src/users/users.table";
-import { Client } from "./client.table";
+import { Column, DataType, Model, Table } from "sequelize-typescript";
 import tables from "./config";
 
 export interface PassportCreationAttr {
