@@ -5,7 +5,8 @@ import { Child } from "../child.table";
 import { Communication } from "../communication.table";
 import { Job } from "../job.table";
 import { Passport } from "../passport.table";
-import { IsArray, IsInt, IsObject, IsString } from "class-validator";
+import { IsArray, IsInt, IsObject, IsString, Validate } from "class-validator";
+import { DateValidator } from "../dateValidator";
 
 export class CreateClientDto {   
 
@@ -22,7 +23,10 @@ export class CreateClientDto {
     readonly patronymic: string;
 
     @ApiProperty({example: '10.10.1994', description: 'Дата рождения'})
-    @IsString({message:'dob - должно быть строкой'})
+    //@IsString({message:'dob - должно быть строкой'})
+    @Validate(DateValidator, {
+        message: 'Title is too short or long!',
+      })
     readonly dob: Date;
     
     @ApiProperty({example: '[{"name":"Петр"}]', description: 'Массив с детьми'})
