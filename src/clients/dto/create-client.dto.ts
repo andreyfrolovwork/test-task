@@ -5,10 +5,13 @@ import { Child } from "../child.table";
 import { Communication } from "../communication.table";
 import { Job } from "../job.table";
 import { Passport } from "../passport.table";
-import { IsArray, IsInt, IsObject, IsOptional, IsString, Validate } from "class-validator";
+import { IsArray, IsDefined, IsInt, IsNotEmptyObject, IsObject, IsOptional, IsString, Validate, ValidateNested } from "class-validator";
 import { CreateChildDto } from "./create-child.dto";
 import { DateValidator } from "src/shared/dateValidator";
 import { isNumberValidator } from "src/shared/isNumberValidator";
+import { Type } from "class-transformer";
+import { CreateAddressDto } from "./create-address.dto";
+import { CreateCommunicationDto } from "./create-communication.dto";
 
 export class CreateClientDto {   
 
@@ -39,7 +42,9 @@ export class CreateClientDto {
     
     @ApiProperty({example: '[{Children}]', description: 'Массив с детьми'})
     @IsOptional()
-    @IsArray({message:"children - должен быть массивом"})
+    @IsArray({message:"children - должен быть массивом"})        
+    @ValidateNested({ each: true, message:"children - массив должен содержать сущности [child]" })
+    @Type(() => CreateChildDto)
     readonly children?: CreateChildDto[];
 
     @ApiProperty({example: '["b4c0ffbc-2d8d-4590-a0ba-04e49f017897"]', description: 'Массив с id документов'})
@@ -52,20 +57,32 @@ export class CreateClientDto {
     @ApiProperty({example: '{Passport}', description: 'Пасспорт клиента'})
     @IsOptional()
     @IsObject({message:"passport - должен быть обьектом"})
-    readonly passport: Passport
+    @IsDefined()
+    @IsNotEmptyObject()   
+    @ValidateNested({message:"passport - массив должен содержать сущности [Passport]" })
+    @Type(() => CreateAddressDto)
+    readonly passport: CreateAddressDto
 
     readonly livingAddressId: string;
 
     @ApiProperty({example: '{Address}', description: 'Адрес проживания клиента'})
     @IsOptional()
     @IsObject({message:"livingAddress - должен быть обьектом"})
-    readonly livingAddress: Address
+    @IsDefined()
+    @IsNotEmptyObject()   
+    @ValidateNested({message:"livingAddress - массив должен содержать сущности [Address]" })
+    @Type(() => CreateAddressDto)
+    readonly livingAddress: CreateAddressDto
 
     readonly regAddressId: string;
 
     @ApiProperty({example: '{Address}', description: 'Адрес регистрации клиента'})
     @IsOptional()
     @IsObject({message:"regAddress - должен быть обьектом"})  
+    @IsDefined()
+    @IsNotEmptyObject()   
+    @ValidateNested({message:"regAddress - массив должен содержать сущности [Address]" })
+    @Type(() => CreateAddressDto)
     readonly regAddress: Address
 
     @ApiProperty({example: '[{Job}]', description: 'Массив с местами где работает клиент'})
@@ -100,7 +117,9 @@ export class CreateClientDto {
     @ApiProperty({example: '[{Communication}]', description: ''})
     @IsOptional()
     @IsArray({message:"communication - должен быть массивом"})
-    readonly communication:Communication[];
+    @ValidateNested({ each: true, message:"communication - массив должен содержать сущности [Communication]" })
+    @Type(() => CreateCommunicationDto)
+    readonly communication:CreateCommunicationDto[];
 
     readonly spouse: number; 
 

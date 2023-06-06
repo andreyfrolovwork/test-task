@@ -213,3 +213,4 @@ Executing (default): CREATE TABLE IF NOT EXISTS "child3" ("id"  SERIAL UNIQUE , 
 Executing (default): SELECT i.relname AS name, ix.indisprimary AS primary, ix.indisunique AS unique, ix.indkey AS indkey, array_agg(a.attnum) as column_indexes, array_agg(a.attname) 
 AS column_names, pg_get_indexdef(ix.indexrelid) AS definition FROM pg_class t, pg_class i, pg_index ix, pg_attribute a WHERE t.oid = ix.indrelid AND i.oid = ix.indexrelid AND a.attrelid = t.oid AND t.relkind = 'r' and t.relname = 'child3' GROUP BY i.relname, ix.indexrelid, ix.indisprimary, ix.indisunique, ix.indkey ORDER BY i.relname;
 Executing (default): CREATE TABLE IF NOT EXISTS "job3" ("id" VARCHAR(255) , "description" VARCHAR(255), "clientId" INTEGER REFERENCES "client3" ("id") ON DELETE CASCADE ON UPDATE CASCADE, "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL, "destroyTime" TIMESTAMP WITH TIME ZONE, PRIMARY KEY ("id"));
+
