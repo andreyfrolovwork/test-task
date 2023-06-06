@@ -1,6 +1,6 @@
 import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
 
-@ValidatorConstraint({ name: 'customText', async: false })
+@ValidatorConstraint({ name: 'dateValidator', async: false })
 export class DateValidator implements ValidatorConstraintInterface {
   validate(text: string, args: ValidationArguments) {
 
@@ -12,3 +12,4 @@ export class DateValidator implements ValidatorConstraintInterface {
     return 'Это не дата!';
   }
 }
+

@@ -1,6 +1,6 @@
 import { IsString } from "class-validator";
 
-export class createChildDto {
+export class CreateChildDto {
     @IsString({message:'name - должно быть строкой'})
     readonly name?: string;
     @IsString({message:'surname - должно быть строкой'})

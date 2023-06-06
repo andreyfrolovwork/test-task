@@ -176,6 +176,7 @@ export class ClientService {
             addressRepo: this.addressRepo,
             comRepo:this.comRepo
         }
+        //@ts-ignore
         const user = await this.clientRepo.create(dto)
         await update(user, clientPropsDef, dto, repos)
         const userAdfterUpdate = await this.clientRepo.findByPk(user.id,{
