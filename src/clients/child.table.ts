@@ -2,6 +2,7 @@ import { Column, DataType, DefaultScope, ForeignKey, Model, Table } from "sequel
 import { Client } from "./client.table";
 import tables from "./config";
 import { literal } from "sequelize";
+import { CreateChildDto } from "./dto/create-child.dto";
 
 export interface ChildCreationAttr {
     id?: string;
@@ -24,7 +25,7 @@ export interface ChildCreationAttr {
     },
   }))
 @Table({ tableName: tables.child, paranoid:true, deletedAt: 'destroyTime'  })
-export class Child extends Model<Child, ChildCreationAttr> {
+export class Child extends Model<Child, CreateChildDto> {
 
     @Column({
         type: DataType.UUID,

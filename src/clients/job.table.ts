@@ -3,6 +3,7 @@ import { Client } from "./client.table";
 import tables from "./config";
 import { literal } from "sequelize";
 import { Address } from "./address.table";
+import { CreateJobDto } from "./dto/create-job-dto";
 
 export interface JobCreationAttr {
     type:string;
@@ -34,7 +35,7 @@ export interface JobCreationAttr {
     },
   }))
 @Table({ tableName: tables.job, paranoid:true, deletedAt: 'destroyTime'  })
-export class Job extends Model<Job, JobCreationAttr> {
+export class Job extends Model<Job, CreateJobDto> {
     
     @Column({
         type: DataType.UUID,

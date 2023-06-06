@@ -6,6 +6,7 @@ import { Communication } from "./communication.table";
 import tables from "./config";
 import { Job } from "./job.table";
 import { literal } from "sequelize";
+import { CreateClientDto } from "./dto/create-client.dto";
 
 interface ClientCreationAttr {
     id: string;
@@ -55,7 +56,7 @@ interface ClientCreationAttr {
     },
   }))
 @Table({ tableName: tables.client, paranoid: true, deletedAt: 'destroyTime' })
-export class Client extends Model<Client, ClientCreationAttr> {
+export class Client extends Model<Client, CreateClientDto> {
 
     @Column({
         type: DataType.UUID,

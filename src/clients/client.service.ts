@@ -18,7 +18,19 @@ const clientPropsDef = [
     {
         propName: 'jobs',
         repo: 'jobRepo',
-        type: 'array'
+        type: 'array',
+        subModels:[
+            [{
+                propName: 'factAddress',
+                repo: 'addressRepo',
+                type: 'one'
+            },
+            {
+                propName: 'jurAddress',
+                repo: 'addressRepo',
+                type: 'one'
+            }]
+        ]
     },
     {
         propName: 'communication',
@@ -90,6 +102,42 @@ export class ClientService {
         return user2
     }
     async test(dto: CreateClientDto) {
+        const repos = {
+            passportRepo: this.passportRepo,
+            childRepo: this.childRepo,
+            jobRepo: this.jobRepo,
+            addressRepo: this.addressRepo,
+            comRepo: this.comRepo
+        }
+        const jobDto = {
+            factAddress:{
+                country:'Russia'
+            },
+            jurAddress:{
+                country:"Mordor"
+            }
+        }
+        const job = await this.jobRepo.findByPk('5148aefd-7cac-44c7-8420-3c548db0676e')
+        const jobProp = [{
+            propName: 'factAddress',
+            repo: 'addressRepo',
+            type: 'one'
+        },
+        {
+            propName: 'jurAddress',
+            repo: 'addressRepo',
+            type: 'one'
+        }]
+
+        await update(job, jobProp, jobDto, repos)
+
+        const updatedJob = await this.jobRepo.findByPk('5148aefd-7cac-44c7-8420-3c548db0676e',{
+            include:{
+                all:true
+            }
+        })
+
+        return updatedJob
 
         /*      const repos = {
                  passportRepo: this.passportRepo,
@@ -141,32 +189,32 @@ export class ClientService {
              }
       */
 
-        const updatedUser3 = await this.clientRepo.findByPk(1, {
-            include: {
-                all: true
-            }
-        })
+        // const updatedUser3 = await this.clientRepo.findByPk(1, {
+        //     include: {
+        //         all: true
+        //     }
+        // })
 
-        const ad1 = await this.addressRepo.create({
-            country: 'ad1'
-        })
+        // const ad1 = await this.addressRepo.create({
+        //     country: 'ad1'
+        // })
 
-        const ad2 = await this.addressRepo.create({
-            country: 'ad2'
-        })
-        /* 
-                updatedUser3.regAddressId = ad1.id
-                updatedUser3.livingAddressId = ad2.id
-         */
-        await updatedUser3.save()
+        // const ad2 = await this.addressRepo.create({
+        //     country: 'ad2'
+        // })
+        // /* 
+        //         updatedUser3.regAddressId = ad1.id
+        //         updatedUser3.livingAddressId = ad2.id
+        //  */
+        // await updatedUser3.save()
 
-        const updatedUser4 = await this.clientRepo.findByPk(1, {
-            include: {
-                all: true
-            }
-        })
+        // const updatedUser4 = await this.clientRepo.findByPk(1, {
+        //     include: {
+        //         all: true
+        //     }
+        // })
 
-        return updatedUser4
+        // return updatedUser4
     }
     async createClient(dto: CreateClientDto) {
         const repos = {
@@ -175,16 +223,38 @@ export class ClientService {
             jobRepo: this.jobRepo,
             addressRepo: this.addressRepo,
             comRepo: this.comRepo
-        }
-        //@ts-ignore
+        }        
         const user = await this.clientRepo.create(dto)
         await update(user, clientPropsDef, dto, repos)
-        const userAdfterUpdate = await this.clientRepo.findByPk(user.id, {
+        const userAfterUpdate = await this.clientRepo.findByPk(user.id, {
             include: {
                 all: true
             }
         })
-        return userAdfterUpdate
+        // к этому моменту создан user
+        // у user может быть job, а может и не быть
+        //  const user = {
+        //     jobs:[]
+        //  }
+/*         if(userAfterUpdate.jobs.length !== 0) {
+            const jobSubModels = [
+                [{
+                    propName: 'factAddress',
+                    repo: 'addressRepo',
+                    type: 'one'
+                },
+                {
+                    propName: 'jurAddress',
+                    repo: 'addressRepo',
+                    type: 'one'
+                }]
+            ]
+            const arr = userAfterUpdate.jobs.map((job)=> {
+                return update(job, jobSubModels, )
+            })
+
+        } */
+        return userAfterUpdate
     }
     async getAllClient() {
         const usersWithPassports = await this.clientRepo.findAll({
@@ -213,6 +283,7 @@ export class ClientService {
         }
 
         await update(user, clientPropsDef, clientDto, repos)
+
         // CreateClientDto не соответстует модели Client, надо подумать как убрать ошибку ts
         //@ts-ignore
         user.set(clientDto)

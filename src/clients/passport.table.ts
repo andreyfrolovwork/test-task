@@ -1,6 +1,7 @@
 import { Column, DataType, DefaultScope, Model, Table } from "sequelize-typescript";
 import tables from "./config";
 import { literal } from "sequelize";
+import { CreatePassportDto } from "./dto/create-passport.dto";
 
 export interface PassportCreationAttr {
     id: string;
@@ -21,7 +22,7 @@ export interface PassportCreationAttr {
     },
   }))
 @Table({ tableName: tables.passport, paranoid:true, deletedAt: 'destroyTime'  })
-export class Passport extends Model<Passport, PassportCreationAttr> {
+export class Passport extends Model<Passport, CreatePassportDto> {
 
     @Column({
         type: DataType.UUID,

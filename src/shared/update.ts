@@ -9,6 +9,9 @@ export interface multiArr {
 
 export function updateSubModels(model: Model, muiltiplePropsArray: multiArr[], clientDto, repos) {
     return function (propsElement: multiArr) {
+        if(propsElement.propName === 'jobs') {
+            debugger
+        }
         if (propsElement.type === 'array') {
             return updateSubModelArray(model, muiltiplePropsArray, clientDto, repos)(propsElement)
         } else if (propsElement.type === 'one') {

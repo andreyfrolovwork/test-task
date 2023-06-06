@@ -1,6 +1,7 @@
 import { Column, DataType, DefaultScope, Model, Table } from "sequelize-typescript";
 import tables from "./config";
 import { literal } from "sequelize";
+import { CreateAddressDto } from "./dto/create-address.dto";
 
 export interface AddressCreationAttr {
     id?: number;
@@ -27,7 +28,7 @@ export interface AddressCreationAttr {
     },
   }))  
 @Table({ tableName: tables.testAddress, paranoid: true, deletedAt: 'destroyTime' })
-export class Address extends Model<Address, AddressCreationAttr> {
+export class Address extends Model<Address, CreateAddressDto> {
 
     @Column({
         type: DataType.UUID,

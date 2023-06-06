@@ -1,6 +1,7 @@
 import { Column, DataType, DefaultScope, ForeignKey, IsUUID, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { Client } from "./client.table";
 import tables from "./config";
+import { CreateCommunicationDto } from "./dto/create-communication.dto";
 
 export interface CommunicationCreationAttr {
 
@@ -20,7 +21,7 @@ export interface CommunicationCreationAttr {
     },
   }))
 @Table({ tableName: tables.communication, paranoid:true, deletedAt: 'destroyTime'  })
-export class Communication extends Model<Communication, CommunicationCreationAttr> {
+export class Communication extends Model<Communication, CreateCommunicationDto> {
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     readonly id: number;

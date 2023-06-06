@@ -3,6 +3,8 @@ import { IsOptional, IsString, Validate } from "class-validator";
 import { DateValidator } from "src/shared/dateValidator";
 
 export class CreatePassportDto {
+    readonly id?:string;
+
     @ApiProperty({example: '7474', description: 'Серия'})
     @IsOptional()
     @IsString({message:'series - должно быть строкой'})
