@@ -1,4 +1,4 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, IsUUID, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, DefaultScope, ForeignKey, HasMany, IsUUID, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { Passport } from "./passport.table";
 import { Child } from "./child.table";
 import { Address } from "./address.table";
@@ -49,6 +49,11 @@ interface ClientCreationAttr {
     spouse: number;
 }
 
+@DefaultScope(() => ({
+    attributes: {
+        exclude: ['passportId', 'livingAddressId', 'regAddressId','createdAt','updatedAt','destroyTime'],
+    },
+  }))
 @Table({ tableName: tables.client, paranoid: true, deletedAt: 'destroyTime' })
 export class Client extends Model<Client, ClientCreationAttr> {
 
@@ -123,4 +128,6 @@ export class Client extends Model<Client, ClientCreationAttr> {
 
     @Column({ type: DataType.UUID, allowNull: true, })
     spouse: string;
+
+    
 }

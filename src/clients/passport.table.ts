@@ -1,4 +1,4 @@
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { Column, DataType, DefaultScope, Model, Table } from "sequelize-typescript";
 import tables from "./config";
 import { literal } from "sequelize";
 
@@ -15,6 +15,11 @@ export interface PassportCreationAttr {
 
 }
 
+@DefaultScope(() => ({
+    attributes: {
+        exclude: ['createdAt','updatedAt','destroyTime']
+    },
+  }))
 @Table({ tableName: tables.passport, paranoid:true, deletedAt: 'destroyTime'  })
 export class Passport extends Model<Passport, PassportCreationAttr> {
 
@@ -37,10 +42,4 @@ export class Passport extends Model<Passport, PassportCreationAttr> {
     @Column({ type: DataType.DATEONLY, allowNull: true })
     dateIssued: Date;
 
-/*     @ForeignKey(() => Client) 
-    @Column({type: DataType.INTEGER})
-    clientId: number;
-
-    @BelongsTo(() => Client)
-    author: Client */
 }

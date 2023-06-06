@@ -1,4 +1,4 @@
-import { Column, DataType, ForeignKey, IsUUID, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { Column, DataType, DefaultScope, ForeignKey, IsUUID, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { Client } from "./client.table";
 import tables from "./config";
 
@@ -14,13 +14,13 @@ export interface CommunicationCreationAttr {
 
 }
 
+@DefaultScope(() => ({
+    attributes: {
+        exclude: ['clientId','createdAt','updatedAt','destroyTime']
+    },
+  }))
 @Table({ tableName: tables.communication, paranoid:true, deletedAt: 'destroyTime'  })
 export class Communication extends Model<Communication, CommunicationCreationAttr> {
-
-/*     @IsUUID(4)
-    @PrimaryKey
-    @Column
-    readonly id: string; */
 
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     readonly id: number;

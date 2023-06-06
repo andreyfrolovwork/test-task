@@ -4,10 +4,6 @@ import { CreateClientDto } from "./dto/create-client.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBadRequestResponse,ApiOkResponse, ApiProperty } from "@nestjs/swagger";
 import { Client } from "./client.table";
 
-class ITest {
-    foo:string;
-}
-
 class BadRequest {
     @ApiProperty({example: '404', description: 'Статус возврата'})
     readonly status:number;
@@ -46,7 +42,7 @@ export class ClientController {
             },
         },
         status:400,
-        description:'Ошибка на сервере'
+        description:'Ошибка валидации'
     })
     @ApiResponse({
         schema:{
@@ -56,7 +52,7 @@ export class ClientController {
             },
         },
         status:500,
-        description:'Ошибка валидации'
+        description:'Ошибка на сервере'
     })
     
     

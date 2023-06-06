@@ -52,45 +52,45 @@ export class ClientService {
         @InjectModel(Address) private addressRepo: typeof Address,
         @InjectModel(Communication) private comRepo: typeof Communication
 
-    ) {}
+    ) { }
 
-        async getClientById(clientId:string){
-            const user = await this.clientRepo.findByPk(clientId, {
-                include: {
-                    all: true
-                }
-            })    
-            if (!user) {
-                throw new HttpException('Такого клиента не существует', HttpStatus.NOT_FOUND)
+    async getClientById(clientId: string) {
+        const user = await this.clientRepo.findByPk(clientId, {
+            include: {
+                all: true
             }
-            return user
+        })
+        if (!user) {
+            throw new HttpException('Такого клиента не существует', HttpStatus.NOT_FOUND)
         }
+        return user
+    }
 
-        async put(){
-            const user = await this.clientRepo.findByPk(1, {
-                include: {
-                    all: true
-                }
-            })            
-     /*        user.set({
-                
-                communication: [
-                    //@ts-ignore
-                    {"type":"email", "value":"123"}
-                ]
-            }) */
+    async put() {
+        const user = await this.clientRepo.findByPk(1, {
+            include: {
+                all: true
+            }
+        })
+        /*        user.set({
+                   
+                   communication: [
+                       //@ts-ignore
+                       {"type":"email", "value":"123"}
+                   ]
+               }) */
 
-            await user.save()
+        await user.save()
 
-            const user2 = await this.clientRepo.findByPk(1, {
-                include: {
-                    all: true
-                }
-            })
-            return user2
-        }
+        const user2 = await this.clientRepo.findByPk(1, {
+            include: {
+                all: true
+            }
+        })
+        return user2
+    }
     async test(dto: CreateClientDto) {
-        
+
         /*      const repos = {
                  passportRepo: this.passportRepo,
                  childRepo: this.childRepo,
@@ -174,14 +174,14 @@ export class ClientService {
             childRepo: this.childRepo,
             jobRepo: this.jobRepo,
             addressRepo: this.addressRepo,
-            comRepo:this.comRepo
+            comRepo: this.comRepo
         }
         //@ts-ignore
         const user = await this.clientRepo.create(dto)
         await update(user, clientPropsDef, dto, repos)
-        const userAdfterUpdate = await this.clientRepo.findByPk(user.id,{
-            include:{
-                all:true
+        const userAdfterUpdate = await this.clientRepo.findByPk(user.id, {
+            include: {
+                all: true
             }
         })
         return userAdfterUpdate
@@ -198,9 +198,12 @@ export class ClientService {
             childRepo: this.childRepo,
             jobRepo: this.jobRepo,
             addressRepo: this.addressRepo,
-            comRepo:this.comRepo
+            comRepo: this.comRepo
         }
         const user = await this.clientRepo.findByPk(clientDto.id, {
+            attributes: {
+                include: ['passportId', 'livingAddressId', 'regAddressId']
+            },
             include: {
                 all: true
             }
@@ -208,14 +211,13 @@ export class ClientService {
         if (!user) {
             throw new HttpException('Такого клиента не существует', HttpStatus.NOT_FOUND)
         }
-       
+
         await update(user, clientPropsDef, clientDto, repos)
         // CreateClientDto не соответстует модели Client, надо подумать как убрать ошибку ts
         //@ts-ignore
         user.set(clientDto)
         await user.save()
         const updatedUser = await this.clientRepo.findByPk(clientDto.id, {
-            //include: [this.passportRepo, this.childRepo, this.jobRepo, this.addressNewRepo]
             include: {
                 all: true
             }

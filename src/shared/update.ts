@@ -112,13 +112,19 @@ export function updateOnePropCallBack2(model: Model, propsArr: multiArr[], clien
             (typeof clientDto[propElement.propName] === 'object')) {
             // patch
             return repos[propElement.repo].findByPk(model[propElement.propName + 'Id'])
-                .then((model) => {
+                .then((subModel) => {
                     const modelData = {
                         ...clientDto[propElement.propName]
                     };
                     delete modelData.id
-                    model.set(modelData)
-                    return model.save()
+                    subModel.set(modelData);
+                    return subModel.save();
+                    // try {
+                    //     subModel.set(modelData);
+                    //     return subModel.save();
+                    // } catch (e) {
+                    //     debugger
+                    // }
                 })
 
         } else if (

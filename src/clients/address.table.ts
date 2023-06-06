@@ -1,4 +1,4 @@
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { Column, DataType, DefaultScope, Model, Table } from "sequelize-typescript";
 import tables from "./config";
 import { literal } from "sequelize";
 
@@ -21,6 +21,11 @@ export interface AddressCreationAttr {
 
 }
 
+@DefaultScope(() => ({
+    attributes: {
+        exclude: ['createdAt','updatedAt','destroyTime']
+    },
+  }))  
 @Table({ tableName: tables.testAddress, paranoid: true, deletedAt: 'destroyTime' })
 export class Address extends Model<Address, AddressCreationAttr> {
 

@@ -1,4 +1,4 @@
-import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { Column, DataType, DefaultScope, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Client } from "./client.table";
 import tables from "./config";
 import { literal } from "sequelize";
@@ -18,6 +18,11 @@ export interface ChildCreationAttr {
 
 }
 
+@DefaultScope(() => ({
+    attributes: {
+        exclude: ['clientId','createdAt','updatedAt','destroyTime']
+    },
+  }))
 @Table({ tableName: tables.child, paranoid:true, deletedAt: 'destroyTime'  })
 export class Child extends Model<Child, ChildCreationAttr> {
 

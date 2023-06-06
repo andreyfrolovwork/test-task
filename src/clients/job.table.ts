@@ -1,4 +1,4 @@
-import { Column, DataType, ForeignKey, IsUUID, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { Column, DataType, DefaultScope, ForeignKey, IsUUID, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import { Client } from "./client.table";
 import tables from "./config";
 import { literal } from "sequelize";
@@ -12,6 +12,11 @@ export interface JobCreationAttr {
 
 }
 
+@DefaultScope(() => ({
+    attributes: {
+        exclude: ['clientId','createdAt','updatedAt','destroyTime']
+    },
+  }))
 @Table({ tableName: tables.job, paranoid:true, deletedAt: 'destroyTime'  })
 export class Job extends Model<Job, JobCreationAttr> {
     
