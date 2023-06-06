@@ -32,7 +32,7 @@ export class Communication extends Model<Communication, CommunicationCreationAtt
     value:string;
 
     @ForeignKey(() => Client) 
-    @Column({type: DataType.INTEGER})
-    clientId: number;
+    @Column({type: DataType.UUID})
+    clientId: string;
 
 }

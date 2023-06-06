@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Query, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ClientService } from "./client.service";
 import { CreateClientDto } from "./dto/create-client.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBadRequestResponse } from "@nestjs/swagger";
@@ -27,7 +27,7 @@ export class ClientController {
     @ApiBadRequestResponse({status: 200, type: ITest})
     @UsePipes(ValidationPipe)
     @Get()
-    clientGet(@Query('clientId',ParseIntPipe) clientId:number){
+    clientGet(@Query('clientId',ParseUUIDPipe) clientId:string){
         return this.clientService.getClientById(clientId)
     }
 

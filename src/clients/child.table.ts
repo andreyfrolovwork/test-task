@@ -1,9 +1,10 @@
 import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Client } from "./client.table";
 import tables from "./config";
+import { literal } from "sequelize";
 
 export interface ChildCreationAttr {
-    id?: number;
+    id?: string;
 
     name?: string;
 
@@ -20,8 +21,12 @@ export interface ChildCreationAttr {
 @Table({ tableName: tables.child, paranoid:true, deletedAt: 'destroyTime'  })
 export class Child extends Model<Child, ChildCreationAttr> {
 
-    @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
-    id: number;
+    @Column({
+        type: DataType.UUID,
+        defaultValue: literal('gen_random_uuid()'),
+        primaryKey: true,
+    })
+    id: string;
 
     @Column({ type: DataType.STRING, allowNull: true })
     name: string;
@@ -36,7 +41,7 @@ export class Child extends Model<Child, ChildCreationAttr> {
     dob: Date;
 
     @ForeignKey(() => Client) 
-    @Column({type: DataType.INTEGER})
-    clientId: number;
+    @Column({type: DataType.UUID})
+    clientId: string;
 
 }

@@ -5,9 +5,10 @@ import { Address } from "./address.table";
 import { Communication } from "./communication.table";
 import tables from "./config";
 import { Job } from "./job.table";
+import { literal } from "sequelize";
 
 interface ClientCreationAttr {
-    id: number;
+    id: string;
 
     name: string;
 
@@ -51,13 +52,12 @@ interface ClientCreationAttr {
 @Table({ tableName: tables.client, paranoid: true, deletedAt: 'destroyTime' })
 export class Client extends Model<Client, ClientCreationAttr> {
 
-    // @IsUUID(4)
-    // @PrimaryKey
-    // @Column({unique:true})
-    // id: string;
-
-    @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
-    id: number;
+    @Column({
+        type: DataType.UUID,
+        defaultValue: literal('gen_random_uuid()'),
+        primaryKey: true,
+    })
+    id: string;
 
     @Column({ type: DataType.STRING, allowNull: true })
     name: string;
@@ -78,7 +78,7 @@ export class Client extends Model<Client, ClientCreationAttr> {
     documentIds:Array<number|string>
     
     @ForeignKey(() => Passport)
-    @Column({ type: DataType.INTEGER })
+    @Column({ type: DataType.UUID })
     passportId: number;
 
     @BelongsTo(() => Passport)
@@ -121,6 +121,6 @@ export class Client extends Model<Client, ClientCreationAttr> {
     @HasMany(() => Communication)
     communication:Communication[];
 
-    @Column({ type: DataType.INTEGER, allowNull: true, })
-    spouse: number;
+    @Column({ type: DataType.UUID, allowNull: true, })
+    spouse: string;
 }

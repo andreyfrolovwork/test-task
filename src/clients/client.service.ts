@@ -22,7 +22,7 @@ export class ClientService {
 
     ) {}
 
-        async getClientById(clientId:number){
+        async getClientById(clientId:string){
             const user = await this.clientRepo.findByPk(clientId, {
                 include: {
                     all: true

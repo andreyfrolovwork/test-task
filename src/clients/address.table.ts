@@ -24,8 +24,6 @@ export interface AddressCreationAttr {
 @Table({ tableName: tables.testAddress, paranoid: true, deletedAt: 'destroyTime' })
 export class Address extends Model<Address, AddressCreationAttr> {
 
-    /*     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
-        id: number; */
     @Column({
         type: DataType.UUID,
         defaultValue: literal('gen_random_uuid()'),
