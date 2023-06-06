@@ -1,15 +1,31 @@
-import { Column, DataType, DefaultScope, ForeignKey, IsUUID, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, DefaultScope, ForeignKey, IsUUID, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import { Client } from "./client.table";
 import tables from "./config";
 import { literal } from "sequelize";
+import { Address } from "./address.table";
 
 export interface JobCreationAttr {
-    id?: string;
+    type:string;
 
-    description?: string;
+    dateEmp: Date;
 
-    clientId?:string,    
+    dateDismissal: Date;
 
+    monIncome: number;  
+
+    tin: string;
+
+    factAddressId: string;
+
+    factAddress: Address
+
+    jurAddressId: string;
+
+    jurAddress: Address
+    
+    phoneNumber: string;
+
+    clientId: string;
 }
 
 @DefaultScope(() => ({
@@ -27,8 +43,41 @@ export class Job extends Model<Job, JobCreationAttr> {
     })
     id: string;
 
+    @Column({
+        type:DataType.ENUM,
+        values:['main','part-time'],
+        allowNull:true
+    })
+    type:string;
+
+    @Column({ type: DataType.DATEONLY, allowNull: true })
+    dateEmp: Date;
+
+    @Column({ type: DataType.DATEONLY, allowNull: true })
+    dateDismissal: Date;
+
+    @Column({ type: DataType.INTEGER, allowNull: true })
+    monIncome: number;  
+
     @Column({ type: DataType.STRING, allowNull: true })
-    description: string;
+    tin: string;
+
+    @ForeignKey(() => Address)
+    @Column({ type: DataType.UUID })
+    factAddressId: string;
+
+    @BelongsTo(() => Address, { onDelete: "no action", foreignKey: "factAddressId" })
+    factAddress: Address
+
+    @ForeignKey(() => Address)
+    @Column({ type: DataType.UUID })
+    jurAddressId: string;
+
+    @BelongsTo(() => Address, { onDelete: "no action", foreignKey: "jurAddressId" })
+    jurAddress: Address
+    
+    @Column({ type: DataType.STRING, allowNull: true })
+    phoneNumber: string;
 
     @ForeignKey(() => Client) 
     @Column({type: DataType.UUID})

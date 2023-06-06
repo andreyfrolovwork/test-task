@@ -68,7 +68,6 @@ export class CreateClientDto {
     @ApiProperty({example: '{Address}', description: 'Адрес проживания клиента'})
     @IsOptional()
     @IsObject({message:"livingAddress - должен быть обьектом"})
-    @IsDefined()
     @IsNotEmptyObject()   
     @ValidateNested({message:"livingAddress - массив должен содержать сущности [Address]" })
     @Type(() => CreateAddressDto)
@@ -79,9 +78,8 @@ export class CreateClientDto {
     @ApiProperty({example: '{Address}', description: 'Адрес регистрации клиента'})
     @IsOptional()
     @IsObject({message:"regAddress - должен быть обьектом"})  
-    @IsDefined()
     @IsNotEmptyObject()   
-    @ValidateNested({message:"regAddress - массив должен содержать сущности [Address]" })
+    @ValidateNested({message:"regAddress - должен быть {Address}" })
     @Type(() => CreateAddressDto)
     readonly regAddress: Address
 
