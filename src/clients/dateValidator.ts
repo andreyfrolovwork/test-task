@@ -3,11 +3,12 @@ import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments 
 @ValidatorConstraint({ name: 'customText', async: false })
 export class DateValidator implements ValidatorConstraintInterface {
   validate(text: string, args: ValidationArguments) {
-    return text.length > 1 && text.length < 10; // for async validations you must return a Promise<boolean> here
+
+    return true // for async validations you must return a Promise<boolean> here
   }
 
   defaultMessage(args: ValidationArguments) {
     // here you can provide default error message if validation failed
-    return 'Text ($value) is too short or too long!';
+    return 'Это не дата!';
   }
 }

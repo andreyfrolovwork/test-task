@@ -25,11 +25,11 @@ interface ClientCreationAttr {
 
     passport: Passport
 
-    livingAddressId: number;
+    livingAddressId: string;
 
     livingAddress: Address
 
-    regAddressId: number;
+    regAddressId: string;
 
     regAddress: Address
 
@@ -85,15 +85,15 @@ export class Client extends Model<Client, ClientCreationAttr> {
     passport: Passport
 
     @ForeignKey(() => Address)
-    @Column({ type: DataType.INTEGER })
-    livingAddressId: number;
+    @Column({ type: DataType.UUID })
+    livingAddressId: string;
 
     @BelongsTo(() => Address, { onDelete: "no action", foreignKey: "livingAddressId" })
     livingAddress: Address
 
     @ForeignKey(() => Address)
-    @Column({ type: DataType.INTEGER })
-    regAddressId: number;
+    @Column({ type: DataType.UUID })
+    regAddressId: string;
 
     @BelongsTo(() => Address, { onDelete: "no action", foreignKey: "regAddressId" })
     regAddress: Address

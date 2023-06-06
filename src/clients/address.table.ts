@@ -1,5 +1,6 @@
-import {  Column, DataType, Model, Table } from "sequelize-typescript";
+import { Column, DataType, Model, Table } from "sequelize-typescript";
 import tables from "./config";
+import { literal } from "sequelize";
 
 export interface AddressCreationAttr {
     id?: number;
@@ -7,7 +8,7 @@ export interface AddressCreationAttr {
     zipCode?: string;
 
     country?: string;
-    
+
     region?: string;
 
     city?: string;
@@ -20,11 +21,17 @@ export interface AddressCreationAttr {
 
 }
 
-@Table({ tableName: tables.testAddress, paranoid:true, deletedAt: 'destroyTime'  })
+@Table({ tableName: tables.testAddress, paranoid: true, deletedAt: 'destroyTime' })
 export class Address extends Model<Address, AddressCreationAttr> {
 
-    @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
-    id: number;
+    /*     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
+        id: number; */
+    @Column({
+        type: DataType.UUID,
+        defaultValue: literal('gen_random_uuid()'),
+        primaryKey: true,
+    })
+    id: string;
 
 
     @Column({ type: DataType.STRING, allowNull: true })
@@ -32,7 +39,7 @@ export class Address extends Model<Address, AddressCreationAttr> {
 
     @Column({ type: DataType.STRING, allowNull: true })
     country: string;
-    
+
     @Column({ type: DataType.STRING, allowNull: true })
     region: string;
 
