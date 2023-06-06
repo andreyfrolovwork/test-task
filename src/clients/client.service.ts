@@ -9,6 +9,38 @@ import { Communication } from "./communication.table";
 import { update } from "src/shared/update";
 import { Job } from "./job.table";
 
+const clientPropsDef = [
+    {
+        propName: 'children',
+        repo: 'childRepo',
+        type: 'array'
+    },
+    {
+        propName: 'jobs',
+        repo: 'jobRepo',
+        type: 'array'
+    },
+    {
+        propName: 'communication',
+        repo: 'comRepo',
+        type: 'array'
+    },
+    {
+        propName: 'passport',
+        repo: 'passportRepo',
+        type: 'one'
+    },
+    {
+        propName: 'livingAddress',
+        repo: 'addressRepo',
+        type: 'one'
+    },
+    {
+        propName: 'regAddress',
+        repo: 'addressRepo',
+        type: 'one'
+    }
+]
 
 @Injectable()
 export class ClientService {
@@ -39,9 +71,7 @@ export class ClientService {
                 include: {
                     all: true
                 }
-            })
-
-            
+            })            
      /*        user.set({
                 
                 communication: [
@@ -60,6 +90,7 @@ export class ClientService {
             return user2
         }
     async test(dto: CreateClientDto) {
+        
         /*      const repos = {
                  passportRepo: this.passportRepo,
                  childRepo: this.childRepo,
@@ -138,13 +169,21 @@ export class ClientService {
         return updatedUser4
     }
     async createClient(dto: CreateClientDto) {
-        //@ts-ignore
-        const user = await this.clientRepo.create(dto, /* {
-            //include: this.passportRepo
-            include: 'all'
-        } */)
-        //const query = await this.clientRepository.sequelize.query('select * from client;')
-        return user
+        const repos = {
+            passportRepo: this.passportRepo,
+            childRepo: this.childRepo,
+            jobRepo: this.jobRepo,
+            addressRepo: this.addressRepo,
+            comRepo:this.comRepo
+        }
+        const user = await this.clientRepo.create(dto)
+        await update(user, clientPropsDef, dto, repos)
+        const userAdfterUpdate = await this.clientRepo.findByPk(user.id,{
+            include:{
+                all:true
+            }
+        })
+        return userAdfterUpdate
     }
     async getAllClient() {
         const usersWithPassports = await this.clientRepo.findAll({
@@ -152,7 +191,7 @@ export class ClientService {
         })
         return usersWithPassports
     }
-    async changeClient(clientDto: Client) {
+    async changeClient(clientDto: CreateClientDto) {
         const repos = {
             passportRepo: this.passportRepo,
             childRepo: this.childRepo,
@@ -161,56 +200,19 @@ export class ClientService {
             comRepo:this.comRepo
         }
         const user = await this.clientRepo.findByPk(clientDto.id, {
-            //include: [this.passportRepo, this.childRepo, this.jobRepo, this.addressNewRepo]
             include: {
                 all: true
             }
         })
-
         if (!user) {
             throw new HttpException('Такого клиента не существует', HttpStatus.NOT_FOUND)
         }
-
-        const propsDef = [
-            {
-                propName: 'children',
-                repo: 'childRepo',
-                type: 'array'
-            },
-            {
-                propName: 'jobs',
-                repo: 'jobRepo',
-                type: 'array'
-            },
-            {
-                propName: 'communication',
-                repo: 'comRepo',
-                type: 'array'
-            },
-            {
-                propName: 'passport',
-                repo: 'passportRepo',
-                type: 'one'
-            },
-            {
-                propName: 'livingAddress',
-                repo: 'addressRepo',
-                type: 'one'
-            },
-            {
-                propName: 'regAddress',
-                repo: 'addressRepo',
-                type: 'one'
-            }
-        ]
-
-
-
-        await update(user, propsDef, clientDto, repos)
        
+        await update(user, clientPropsDef, clientDto, repos)
+        // CreateClientDto не соответстует модели Client, надо подумать как убрать ошибку ts
+        //@ts-ignore
         user.set(clientDto)
         await user.save()
-
         const updatedUser = await this.clientRepo.findByPk(clientDto.id, {
             //include: [this.passportRepo, this.childRepo, this.jobRepo, this.addressNewRepo]
             include: {

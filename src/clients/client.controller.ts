@@ -3,10 +3,10 @@ import { ClientService } from "./client.service";
 import { CreateClientDto } from "./dto/create-client.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBadRequestResponse } from "@nestjs/swagger";
 import { Client } from "./client.table";
+
 class ITest {
     foo:string;
 }
-
 
 @ApiTags('Клиенты')
 @Controller('client')
@@ -40,8 +40,7 @@ export class ClientController {
     }
     
     @Patch()
-    getById(@Body() clientDto: CreateClientDto){
-        //@ts-ignore
+    getById(@Body() clientDto: CreateClientDto){   
         return this.clientService.changeClient(clientDto)
     }
 

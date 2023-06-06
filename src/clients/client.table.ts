@@ -18,19 +18,19 @@ interface ClientCreationAttr {
 
     dob: Date;
 
-    children: Child[];
+    children?: Child[];
 
     documentIds:Array<number|string>
     
-    passportId: number;
+    passportId: string;
 
     passport: Passport
 
-    livingAddressId: string;
+    livingAddressId?: string;
 
     livingAddress: Address
 
-    regAddressId: string;
+    regAddressId?: string;
 
     regAddress: Address
 

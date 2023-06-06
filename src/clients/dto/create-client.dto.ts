@@ -10,6 +10,8 @@ import { DateValidator } from "../dateValidator";
 
 export class CreateClientDto {   
 
+    readonly id:string;
+
     @ApiProperty({example: 'Сергей', description: 'Имя'})
     @IsString({message:'name - должно быть строкой'})
     readonly name: string;
@@ -36,17 +38,17 @@ export class CreateClientDto {
     @IsArray({message:"documentIds - должен быть массивом"})
     readonly documentIds:Array<number|string>
     
-    readonly passportId: number;
+    readonly passportId: string;
 
     @IsObject({message:"passport - должен быть обьектом"})
     readonly passport: Passport
 
-    readonly livingAddressId: number;
+    readonly livingAddressId: string;
 
     @IsObject({message:"livingAddress - должен быть обьектом"})
     readonly livingAddress: Address
 
-    readonly regAddressId: number;
+    readonly regAddressId: string;
 
     @IsObject({message:"regAddress - должен быть обьектом"})  
     readonly regAddress: Address
