@@ -6,10 +6,12 @@ import { Passport } from "./passport.table";
 import { Child } from "./child.table";
 import { Address } from "./address.table";
 import { Communication } from "./communication.table";
-import { update } from "src/shared/update";
+import { getLikeOrArray, getStringAttrs, update } from "src/shared/update";
 import { Job } from "./job.table";
 import { findClientDto } from "./dto/find-clients.dto";
 import getPage from "src/shared/getPage";
+import { Op } from "sequelize";
+import { DataType } from "sequelize-typescript";
 
 const clientPropsDef = [
     {
@@ -69,7 +71,7 @@ export class ClientService {
     ) { }
     async test2(body) {
         const repos = {
-            clientRepo:this.clientRepo,
+            clientRepo: this.clientRepo,
             passportRepo: this.passportRepo,
             childRepo: this.childRepo,
             jobRepo: this.jobRepo,
@@ -77,9 +79,10 @@ export class ClientService {
             comRepo: this.comRepo
         }
         let arr = []
-        for(let i = 0; i < 1000; i++) {
+        for (let i = 0; i < 1000; i++) {
             arr.push(repos.clientRepo.create({
-                name: 'Иван - ' + i
+                name: 'Иван - ' + i,
+                surname:'фролов - ' + i
             }))
         }
 
@@ -93,35 +96,35 @@ export class ClientService {
 
         return result
     }
-  /*   async test2(body) {
-        debugger
-        const repos = {
-            passportRepo: this.passportRepo,
-            childRepo: this.childRepo,
-            jobRepo: this.jobRepo,
-            addressRepo: this.addressRepo,
-            comRepo: this.comRepo
-        }
-
-        // const jobs = await repos.jobRepo.findByPk('5e7531b5-a2c9-43dd-9b04-64867ba03880', {
-        //     // include: {
-        //     //     all: true
-        //     // }
-        //     include:{
-
-        //     }
-        // })
-
-        // return jobs
-
-        const clients = await this.clientRepo.findAll({
-            include: {
-                all: true
-            }
-        })
-
-        return clients
-    } */
+    /*   async test2(body) {
+          debugger
+          const repos = {
+              passportRepo: this.passportRepo,
+              childRepo: this.childRepo,
+              jobRepo: this.jobRepo,
+              addressRepo: this.addressRepo,
+              comRepo: this.comRepo
+          }
+  
+          // const jobs = await repos.jobRepo.findByPk('5e7531b5-a2c9-43dd-9b04-64867ba03880', {
+          //     // include: {
+          //     //     all: true
+          //     // }
+          //     include:{
+  
+          //     }
+          // })
+  
+          // return jobs
+  
+          const clients = await this.clientRepo.findAll({
+              include: {
+                  all: true
+              }
+          })
+  
+          return clients
+      } */
 
     async getClientById(clientId: string) {
         const user = await this.clientRepo.findByPk(clientId, {
@@ -286,27 +289,31 @@ export class ClientService {
         const userAfterUpdate = await this.clientRepo.findByPk(user.id)
         return userAfterUpdate
     }
-    async getAllClient(getClientDto:findClientDto) {
-        const at = this.clientRepo.rawAttributes
+    async getAllClient(getClientDto: findClientDto) {
         // по идее валидацию нужно убрать из сервиса в пайп я так понимаю
-        if(getClientDto.sortBy && !this.clientRepo.rawAttributes[getClientDto.sortBy]) {
+        if (getClientDto.sortBy && !this.clientRepo.rawAttributes[getClientDto.sortBy]) {
             throw new HttpException(`${getClientDto.sortBy} - такого поля в модели Client не существует`, HttpStatus.BAD_REQUEST)
         }
-        if(getClientDto.sortDir && !(getClientDto.sortDir === 'asc' || getClientDto.sortDir ===  'desc')) {
+        if (getClientDto.sortDir && !(getClientDto.sortDir === 'asc' || getClientDto.sortDir === 'desc')) {
             throw new HttpException(`sortDir - должен быть asc или desc`, HttpStatus.BAD_REQUEST)
         }
+
+        // текстовые аттрибуты
         const offset = getPage(getClientDto.page, getClientDto.limit)
         const users = await this.clientRepo.findAndCountAll({
-            offset:offset,
-            limit:getClientDto.limit,
-            order:[[getClientDto.sortBy,getClientDto.sortDir]]
+            offset: offset,
+            limit: getClientDto.limit,
+            where: {
+                [Op.or]: getLikeOrArray(getClientDto.search,getStringAttrs(this.clientRepo),Op)
+            },
+            order: [[getClientDto.sortBy, getClientDto.sortDir]],
 
         })
         return {
-            page:getClientDto.page,
-            limit:getClientDto.limit,
-            total:users.count,
-            data:users.rows
+            page: getClientDto.page,
+            limit: getClientDto.limit,
+            total: users.count,
+            data: users.rows
         }
     }
     async changeClient(clientDto: CreateClientDto) {

@@ -1,4 +1,4 @@
-import { Model } from "sequelize-typescript";
+import { DataType, Model } from "sequelize-typescript";
 import { CreateClientDto } from "src/clients/dto/create-client.dto";
 
 export interface multiArr {
@@ -181,4 +181,24 @@ export function updateOnePropCallBack2(model: Model, propsArr: multiArr[], clien
         }
     }
 
+}
+
+
+export function getStringAttrs(model){
+    const rawAttributes = model.rawAttributes
+    const result = []
+    for(let prop in rawAttributes){
+        const isString = rawAttributes[prop].type instanceof DataType.STRING
+        isString ? result.push(prop) : null
+    }
+    return result
+}
+export function getLikeOrArray(searchString, strAtrr, Op){
+    return strAtrr.map((stringProperty) => {
+        return {
+            [stringProperty]: {
+                [Op.like]:`%${searchString}%`
+            }
+        }
+    })
 }

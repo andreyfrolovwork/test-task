@@ -110,7 +110,7 @@ export class Client extends Model<Client, CreateClientDto> {
     @HasMany(() => Job)
     jobs: Job[];
 
-    @Column({ type: DataType.STRING, defaultValue: 0, })
+    @Column({ type: DataType.FLOAT, defaultValue: 0, })
     readonly curWorkExp: number;
 
     @Column({
@@ -121,10 +121,10 @@ export class Client extends Model<Client, CreateClientDto> {
     })
     typeEducation: string;
 
-    @Column({ type: DataType.STRING, defaultValue: 0, allowNull: true })
+    @Column({ type: DataType.FLOAT, defaultValue: 0, allowNull: true })
     monIncome: number;
 
-    @Column({ type: DataType.STRING, defaultValue: 0, allowNull: true })
+    @Column({ type: DataType.FLOAT, defaultValue: 0, allowNull: true })
     monExpenses: number;
 
     @HasMany(() => Communication)
