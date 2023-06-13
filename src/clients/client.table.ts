@@ -21,8 +21,8 @@ interface ClientCreationAttr {
 
     children?: Child[];
 
-    documentIds:Array<number|string>
-    
+    documentIds: Array<number | string>
+
     passportId: string;
 
     passport: Passport
@@ -45,16 +45,19 @@ interface ClientCreationAttr {
 
     monExpenses: number;
 
-    communication:Communication[];
+    communication: Communication[];
 
     spouse: number;
 }
 
 @DefaultScope(() => ({
-    attributes: {
-        exclude: ['passportId', 'livingAddressId', 'regAddressId','createdAt','updatedAt','destroyTime'],
+    include: {
+        all: true, nested: true
     },
-  }))
+    attributes: {
+        exclude: ['passportId', 'livingAddressId', 'regAddressId', 'createdAt', 'updatedAt', 'destroyTime'],
+    },
+}))
 @Table({ tableName: tables.client, paranoid: true, deletedAt: 'destroyTime' })
 export class Client extends Model<Client, CreateClientDto> {
 
@@ -80,9 +83,9 @@ export class Client extends Model<Client, CreateClientDto> {
     @HasMany(() => Child)
     children: Child[];
 
-    @Column({type:DataType.ARRAY(DataType.STRING)})
-    documentIds:Array<number|string>
-    
+    @Column({ type: DataType.ARRAY(DataType.STRING) })
+    documentIds: Array<number | string>
+
     @ForeignKey(() => Passport)
     @Column({ type: DataType.UUID })
     passportId: number;
@@ -110,10 +113,10 @@ export class Client extends Model<Client, CreateClientDto> {
     @Column({ type: DataType.STRING, defaultValue: 0, })
     readonly curWorkExp: number;
 
-    @Column({ 
-        type: DataType.ENUM, 
-        values:['secondary','secondarySpecial','incompleteHigher','higher','twoOrMoreHigher', 'academicDegree'], 
-        allowNull: true, 
+    @Column({
+        type: DataType.ENUM,
+        values: ['secondary', 'secondarySpecial', 'incompleteHigher', 'higher', 'twoOrMoreHigher', 'academicDegree'],
+        allowNull: true,
         //defaultValue: null 
     })
     typeEducation: string;
@@ -125,10 +128,10 @@ export class Client extends Model<Client, CreateClientDto> {
     monExpenses: number;
 
     @HasMany(() => Communication)
-    communication:Communication[];
+    communication: Communication[];
 
     @Column({ type: DataType.UUID, allowNull: true, })
     spouse: string;
 
-    
+
 }

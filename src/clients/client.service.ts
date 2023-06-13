@@ -8,6 +8,8 @@ import { Address } from "./address.table";
 import { Communication } from "./communication.table";
 import { update } from "src/shared/update";
 import { Job } from "./job.table";
+import { findClientDto } from "./dto/find-clients.dto";
+import getPage from "src/shared/getPage";
 
 const clientPropsDef = [
     {
@@ -19,17 +21,17 @@ const clientPropsDef = [
         propName: 'jobs',
         repo: 'jobRepo',
         type: 'array',
-        subModels:[
-            [{
+        subModels: [
+            {
                 propName: 'factAddress',
                 repo: 'addressRepo',
                 type: 'one'
-            },
+            }/* ,
             {
                 propName: 'jurAddress',
                 repo: 'addressRepo',
                 type: 'one'
-            }]
+            } */
         ]
     },
     {
@@ -65,6 +67,61 @@ export class ClientService {
         @InjectModel(Communication) private comRepo: typeof Communication
 
     ) { }
+    async test2(body) {
+        const repos = {
+            clientRepo:this.clientRepo,
+            passportRepo: this.passportRepo,
+            childRepo: this.childRepo,
+            jobRepo: this.jobRepo,
+            addressRepo: this.addressRepo,
+            comRepo: this.comRepo
+        }
+        let arr = []
+        for(let i = 0; i < 1000; i++) {
+            arr.push(repos.clientRepo.create({
+                name: 'Иван - ' + i
+            }))
+        }
+
+        await Promise.all(arr)
+
+        // const p1 =  repos.clientRepo.create({
+        //     name:'test name2'
+        // })
+        // await Promise.all([p1])
+        const result = await this.clientRepo.findAll()
+
+        return result
+    }
+  /*   async test2(body) {
+        debugger
+        const repos = {
+            passportRepo: this.passportRepo,
+            childRepo: this.childRepo,
+            jobRepo: this.jobRepo,
+            addressRepo: this.addressRepo,
+            comRepo: this.comRepo
+        }
+
+        // const jobs = await repos.jobRepo.findByPk('5e7531b5-a2c9-43dd-9b04-64867ba03880', {
+        //     // include: {
+        //     //     all: true
+        //     // }
+        //     include:{
+
+        //     }
+        // })
+
+        // return jobs
+
+        const clients = await this.clientRepo.findAll({
+            include: {
+                all: true
+            }
+        })
+
+        return clients
+    } */
 
     async getClientById(clientId: string) {
         const user = await this.clientRepo.findByPk(clientId, {
@@ -110,11 +167,11 @@ export class ClientService {
             comRepo: this.comRepo
         }
         const jobDto = {
-            factAddress:{
-                country:'Russia'
+            factAddress: {
+                country: 'Russia'
             },
-            jurAddress:{
-                country:"Mordor"
+            jurAddress: {
+                country: "Mordor"
             }
         }
         const job = await this.jobRepo.findByPk('5148aefd-7cac-44c7-8420-3c548db0676e')
@@ -131,9 +188,9 @@ export class ClientService {
 
         await update(job, jobProp, jobDto, repos)
 
-        const updatedJob = await this.jobRepo.findByPk('5148aefd-7cac-44c7-8420-3c548db0676e',{
-            include:{
-                all:true
+        const updatedJob = await this.jobRepo.findByPk('5148aefd-7cac-44c7-8420-3c548db0676e', {
+            include: {
+                all: true
             }
         })
 
@@ -223,44 +280,34 @@ export class ClientService {
             jobRepo: this.jobRepo,
             addressRepo: this.addressRepo,
             comRepo: this.comRepo
-        }        
+        }
         const user = await this.clientRepo.create(dto)
         await update(user, clientPropsDef, dto, repos)
-        const userAfterUpdate = await this.clientRepo.findByPk(user.id, {
-            include: {
-                all: true
-            }
-        })
-        // к этому моменту создан user
-        // у user может быть job, а может и не быть
-        //  const user = {
-        //     jobs:[]
-        //  }
-/*         if(userAfterUpdate.jobs.length !== 0) {
-            const jobSubModels = [
-                [{
-                    propName: 'factAddress',
-                    repo: 'addressRepo',
-                    type: 'one'
-                },
-                {
-                    propName: 'jurAddress',
-                    repo: 'addressRepo',
-                    type: 'one'
-                }]
-            ]
-            const arr = userAfterUpdate.jobs.map((job)=> {
-                return update(job, jobSubModels, )
-            })
-
-        } */
+        const userAfterUpdate = await this.clientRepo.findByPk(user.id)
         return userAfterUpdate
     }
-    async getAllClient() {
-        const usersWithPassports = await this.clientRepo.findAll({
-            include: this.passportRepo
+    async getAllClient(getClientDto:findClientDto) {
+        const at = this.clientRepo.rawAttributes
+        // по идее валидацию нужно убрать из сервиса в пайп я так понимаю
+        if(getClientDto.sortBy && !this.clientRepo.rawAttributes[getClientDto.sortBy]) {
+            throw new HttpException(`${getClientDto.sortBy} - такого поля в модели Client не существует`, HttpStatus.BAD_REQUEST)
+        }
+        if(getClientDto.sortDir && !(getClientDto.sortDir === 'asc' || getClientDto.sortDir ===  'desc')) {
+            throw new HttpException(`sortDir - должен быть asc или desc`, HttpStatus.BAD_REQUEST)
+        }
+        const offset = getPage(getClientDto.page, getClientDto.limit)
+        const users = await this.clientRepo.findAndCountAll({
+            offset:offset,
+            limit:getClientDto.limit,
+            order:[[getClientDto.sortBy,getClientDto.sortDir]]
+
         })
-        return usersWithPassports
+        return {
+            page:getClientDto.page,
+            limit:getClientDto.limit,
+            total:users.count,
+            data:users.rows
+        }
     }
     async changeClient(clientDto: CreateClientDto) {
         const repos = {
@@ -275,7 +322,8 @@ export class ClientService {
                 include: ['passportId', 'livingAddressId', 'regAddressId']
             },
             include: {
-                all: true
+                all: true,
+                nested: true
             }
         })
         if (!user) {
@@ -288,11 +336,7 @@ export class ClientService {
         //@ts-ignore
         user.set(clientDto)
         await user.save()
-        const updatedUser = await this.clientRepo.findByPk(clientDto.id, {
-            include: {
-                all: true
-            }
-        })
+        const updatedUser = await this.clientRepo.findByPk(clientDto.id)
         return updatedUser
     }
 }

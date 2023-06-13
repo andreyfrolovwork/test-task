@@ -30,7 +30,7 @@ export interface JobCreationAttr {
 }
 
 @DefaultScope(() => ({
-    attributes: {
+    attributes: {        
         exclude: ['clientId','createdAt','updatedAt','destroyTime']
     },
   }))

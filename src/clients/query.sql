@@ -214,3 +214,51 @@ Executing (default): SELECT i.relname AS name, ix.indisprimary AS primary, ix.in
 AS column_names, pg_get_indexdef(ix.indexrelid) AS definition FROM pg_class t, pg_class i, pg_index ix, pg_attribute a WHERE t.oid = ix.indrelid AND i.oid = ix.indexrelid AND a.attrelid = t.oid AND t.relkind = 'r' and t.relname = 'child3' GROUP BY i.relname, ix.indexrelid, ix.indisprimary, ix.indisunique, ix.indkey ORDER BY i.relname;
 Executing (default): CREATE TABLE IF NOT EXISTS "job3" ("id" VARCHAR(255) , "description" VARCHAR(255), "clientId" INTEGER REFERENCES "client3" ("id") ON DELETE CASCADE ON UPDATE CASCADE, "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL, "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL, "destroyTime" TIMESTAMP WITH TIME ZONE, PRIMARY KEY ("id"));
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT 
+"Job"."id", 
+"Job"."type", 
+"Job"."dateEmp", 
+"Job"."dateDismissal", 
+"Job"."monIncome", 
+"Job"."tin", 
+"Job"."factAddressId", 
+"Job"."jurAddressId", 
+"Job"."phoneNumber", 
+"factAddress"."id" AS "factAddress.id", 
+"factAddress"."zipCode" AS "factAddress.zipCode", 
+"factAddress"."country" AS "factAddress.country", 
+"factAddress"."region" AS "factAddress.region", 
+"factAddress"."city" AS "factAddress.city", 
+"factAddress"."street" AS "factAddress.street", 
+"factAddress"."house" AS "factAddress.house", 
+"factAddress"."apartment" AS "factAddress.apartment", 
+"jurAddress"."id" AS "jurAddress.id", 
+"jurAddress"."zipCode" AS "jurAddress.zipCode", 
+"jurAddress"."country" AS "jurAddress.country", 
+"jurAddress"."region" AS "jurAddress.region", 
+"jurAddress"."city" AS "jurAddress.city", 
+"jurAddress"."street" AS "jurAddress.street", 
+"jurAddress"."house" AS "jurAddress.house", 
+"jurAddress"."apartment" AS "jurAddress.apartment" FROM "job12" AS "Job" 
+LEFT OUTER JOIN "testAdress12" AS "factAddress" ON "Job"."factAddressId" = "factAddress"."id" AND ("factAddress"."destroyTime" IS NULL) 
+LEFT OUTER JOIN "testAdress12" AS "jurAddress" ON "Job"."jurAddressId" = "jurAddress"."id" AND ("jurAddress"."destroyTime" IS NULL) 
+    WHERE ("Job"."destroyTime" IS NULL);

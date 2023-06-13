@@ -62,11 +62,11 @@ export class CreateJobDto {
   readonly jurAddress: Address
   
   @ApiProperty({ example: '79821048575', description: 'Значение средства связи' }) 
-  @IsDefined({ message: 'value - должен быть not be null or undefined' })
-  @IsString({ message: 'value - должно быть строкой' })
+  @IsOptional()  
+  @IsString({ message: 'phoneNumber - должно быть строкой' })
   @IsMobilePhone()
   readonly phoneNumber: string;
-
+  
   readonly clientId: string;
 
 }

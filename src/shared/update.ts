@@ -9,9 +9,6 @@ export interface multiArr {
 
 export function updateSubModels(model: Model, muiltiplePropsArray: multiArr[], clientDto, repos) {
     return function (propsElement: multiArr) {
-        if(propsElement.propName === 'jobs') {
-            debugger
-        }
         if (propsElement.type === 'array') {
             return updateSubModelArray(model, muiltiplePropsArray, clientDto, repos)(propsElement)
         } else if (propsElement.type === 'one') {
@@ -21,8 +18,10 @@ export function updateSubModels(model: Model, muiltiplePropsArray: multiArr[], c
 }
 
 export async function update(model: Model, muiltiplePropsArray: multiArr[], clientDto, repos) {
+    // if(!!clientDto.factAddress) {
+    //     debugger
+    // }
     await Promise.all(muiltiplePropsArray.map(updateSubModels(model, muiltiplePropsArray, clientDto, repos)))
-
 }
 
 
@@ -34,6 +33,7 @@ export async function updateMulitipleProps(model: Model, muiltiplePropsArray: mu
 export function updateSubModelArray(model: Model, muiltiplePropsArray: multiArr[], clientDto, repos): any {
     return function (subModelPropElement: multiArr) {
         if (clientDto[subModelPropElement.propName]) {
+
             if (clientDto[subModelPropElement.propName] === null) {
                 return repos[subModelPropElement.repo].destroy({
                     where: {
@@ -63,16 +63,38 @@ export function updateSubModelArray(model: Model, muiltiplePropsArray: multiArr[
 export function subModelUpdateOrCreateByid(mPropArr, repos, clientDto) {
     return function (subModel) {
         if (!subModel.id) {
+            console.log('')
+            console.log('______________________create model______________________')
+            console.log('')
             return repos[mPropArr.repo].create({
                 clientId: clientDto.id,
                 ...subModel
+            }).then((subModelAfterCreate) => {
+                let m = subModelAfterCreate
+                if(mPropArr.subModels) {
+                    // debugger
+                    // return repos.addressRepo.create({...subModel.factAddress}).then((adres) => {
+                    //     let a = m
+                    //     subModelAfterCreate.factAddressId = adres.id
+                    //     return subModelAfterCreate.save()
+                    //     debugger5
+                    // })
+                    return update(subModelAfterCreate, mPropArr.subModels,subModel,repos)
+                }              
             });
         } else if (subModel.id) {
+            console.log('')
+            console.log('______________________find and update______________________')
+            console.log('')
             return repos[mPropArr.repo].findByPk(subModel.id)
                 .then((model) => {
                     if (model) {
                         model.set(subModel);
-                        return model.save();
+                        return model.save().then((subModelAfterCreate)=> {
+                            if(mPropArr.subModels) {
+                                return update(subModelAfterCreate, mPropArr.subModels,subModel,repos)
+                            }
+                        });
                     }
                 });
 
@@ -114,6 +136,9 @@ export function updateOnePropCallBack2(model: Model, propsArr: multiArr[], clien
             clientDto[propElement.propName] !== undefined &&
             (typeof clientDto[propElement.propName] === 'object')) {
             // patch
+            console.log('')
+            console.log('______________________patch one model______________________')
+            console.log('')
             return repos[propElement.repo].findByPk(model[propElement.propName + 'Id'])
                 .then((subModel) => {
                     const modelData = {
@@ -136,6 +161,9 @@ export function updateOnePropCallBack2(model: Model, propsArr: multiArr[], clien
             (typeof clientDto[propElement.propName] === 'object')
         ) {
             //create
+            console.log('')
+            console.log('______________________create one model______________________')
+            console.log('')
             const modelData = {
                 ...clientDto[propElement.propName]
             };
@@ -143,6 +171,9 @@ export function updateOnePropCallBack2(model: Model, propsArr: multiArr[], clien
             return repos[propElement.repo]
                 .create(modelData)
                 .then((newAddress) => {
+                    // if(propElement.propName === 'factAddress') {
+                    //     debugger
+                    // }
                     model[propElement.propName + 'Id'] = newAddress.id
                     return model.save()
                 })
