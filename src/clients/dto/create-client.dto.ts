@@ -30,14 +30,14 @@ export class CreateClientDto {
     @IsString({message:'patronymic - должно быть строкой'})
     readonly patronymic?: string;
 
-    @ApiProperty({example: '10.10.1994', description: 'Дата рождения'})
+    @ApiProperty({example: '1994-05-05', description: 'Дата рождения'})
     @IsOptional()
     @Validate(DateValidator, {
         message: 'dob должна быть датой',
       })
     readonly dob?: Date;
     
-    @ApiProperty({example: '[{Children}]', description: 'Массив с детьми'})
+    @ApiProperty({example: `[{"name":"Alise"}]`, description: 'Массив с детьми'})
     @IsOptional()
     @IsArray({message:"children - должен быть массивом"})        
     @ValidateNested({ each: true, message:"children - массив должен содержать сущности [child]" })
@@ -51,7 +51,7 @@ export class CreateClientDto {
     
     readonly passportId?: string;
 
-    @ApiProperty({example: '{Passport}', description: 'Пасспорт клиента'})
+    @ApiProperty({example: '{"series":"4440"}', description: 'Пасспорт клиента'})
     @IsOptional()
     @IsObject({message:"passport - должен быть обьектом"})
     @IsDefined()
@@ -62,7 +62,7 @@ export class CreateClientDto {
 
     readonly livingAddressId?: string;
 
-    @ApiProperty({example: '{Address}', description: 'Адрес проживания клиента'})
+    @ApiProperty({example: '{"zipCode":"454074"}', description: 'Адрес проживания клиента'})
     @IsOptional()
     @IsObject({message:"livingAddress - должен быть обьектом"})
     @IsNotEmptyObject()   
@@ -72,7 +72,7 @@ export class CreateClientDto {
 
     readonly regAddressId?: string;
 
-    @ApiProperty({example: '{Address}', description: 'Адрес регистрации клиента'})
+    @ApiProperty({example: '{"zipCode":"454054"}', description: 'Адрес регистрации клиента'})
     @IsOptional()
     @IsObject({message:"regAddress - должен быть обьектом"})  
     @IsNotEmptyObject()   
@@ -80,7 +80,7 @@ export class CreateClientDto {
     @Type(() => CreateAddressDto)
     readonly regAddress?: Address
 
-    @ApiProperty({example: '[{Job}]', description: 'Массив с местами где работает клиент'})
+    @ApiProperty({example: '[{"type":"main"}]', description: 'Массив с местами где работает клиент'})
     @IsOptional()
     @IsArray({message:"jobs - должен быть массивом"})        
     @ValidateNested({ each: true, message:"jobs - массив должен содержать сущности [job]" })
@@ -111,7 +111,7 @@ export class CreateClientDto {
     })
     readonly monExpenses?: number;
 
-    @ApiProperty({example: '[{Communication}]', description: ''})
+    @ApiProperty({example: '[{"type":"phone", "value":"89517456446"}]', description: 'Средства связи клиента'})
     @IsOptional()
     @IsArray({message:"communication - должен быть массивом"})
     @ValidateNested({ each: true, message:"communication - массив должен содержать сущности [Communication]" })

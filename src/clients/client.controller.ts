@@ -60,6 +60,7 @@ export class ClientController {
     }
 
     @ApiOperation({ summary: 'Просмотр клиента' })
+    @ApiResponse({ status: 200, type: CreateClientDto })
     @ApiResponse(Response404)
     @ApiResponse(Response400)
     @ApiResponse(Response500)
@@ -69,6 +70,7 @@ export class ClientController {
     }
 
     @ApiOperation({ summary: 'Создание клиента' })
+    @ApiResponse({ status: 200, type: CreateClientDto })
     @ApiResponse(Response404)
     @ApiResponse(Response400)
     @ApiResponse(Response500)
@@ -78,6 +80,7 @@ export class ClientController {
     }
 
     @ApiOperation({ summary: 'Изменение клиента' })
+    @ApiResponse({ status: 200, type: CreateClientDto })
     @ApiResponse(Response404)
     @ApiResponse(Response400)
     @ApiResponse(Response500)

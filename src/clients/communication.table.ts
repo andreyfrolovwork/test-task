@@ -1,4 +1,4 @@
-import { Column, DataType, DefaultScope, ForeignKey, IsUUID, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { Column, DataType, DefaultScope, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Client } from "./client.table";
 import tables from "../config";
 import { CreateCommunicationDto } from "./dto/create-communication.dto";

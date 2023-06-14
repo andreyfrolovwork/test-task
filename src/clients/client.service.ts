@@ -72,7 +72,8 @@ export class ClientService {
     async getClientById(clientId: string) {
         const user = await this.clientRepo.findByPk(clientId, {
             include: {
-                all: true
+                all: true,
+                nested: true
             }
         })
         if (!user) {

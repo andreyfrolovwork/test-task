@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional, IsString } from "class-validator";
 
 export class CreateAddressDto {
+    
     @ApiProperty({example: '454074', description: 'zipCode'})
     @IsOptional()
     @IsString({message:'zipCode - должно быть строкой'})
