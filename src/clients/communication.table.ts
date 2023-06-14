@@ -1,19 +1,8 @@
 import { Column, DataType, DefaultScope, ForeignKey, IsUUID, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { Client } from "./client.table";
-import tables from "./config";
+import tables from "../config";
 import { CreateCommunicationDto } from "./dto/create-communication.dto";
-
-export interface CommunicationCreationAttr {
-
-    id: string;
-
-    type: string;
-
-    value:string;
-
-    clientId:number; 
-
-}
+import { literal } from "sequelize";
 
 @DefaultScope(() => ({
     attributes: {
@@ -23,8 +12,12 @@ export interface CommunicationCreationAttr {
 @Table({ tableName: tables.communication, paranoid:true, deletedAt: 'destroyTime'  })
 export class Communication extends Model<Communication, CreateCommunicationDto> {
 
-    @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
-    readonly id: number;
+    @Column({
+        type: DataType.UUID,
+        defaultValue: literal('gen_random_uuid()'),
+        primaryKey: true,
+    })
+    id: string;
 
     @Column({ type: DataType.ENUM, values:['email','phone'], allowNull: false })
     type: string;

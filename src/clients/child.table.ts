@@ -1,6 +1,6 @@
 import { Column, DataType, DefaultScope, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Client } from "./client.table";
-import tables from "./config";
+import tables from "../config";
 import { literal } from "sequelize";
 import { CreateChildDto } from "./dto/create-child.dto";
 

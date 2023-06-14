@@ -1,5 +1,7 @@
+import { HttpException, HttpStatus } from "@nestjs/common";
 import { DataType, Model } from "sequelize-typescript";
 import { CreateClientDto } from "src/clients/dto/create-client.dto";
+import { FindClientDto, SortByDto } from "src/clients/dto/find-clients.dto";
 
 export interface multiArr {
     propName: string;
@@ -18,9 +20,6 @@ export function updateSubModels(model: Model, muiltiplePropsArray: multiArr[], c
 }
 
 export async function update(model: Model, muiltiplePropsArray: multiArr[], clientDto, repos) {
-    // if(!!clientDto.factAddress) {
-    //     debugger
-    // }
     await Promise.all(muiltiplePropsArray.map(updateSubModels(model, muiltiplePropsArray, clientDto, repos)))
 }
 
@@ -72,13 +71,6 @@ export function subModelUpdateOrCreateByid(mPropArr, repos, clientDto) {
             }).then((subModelAfterCreate) => {
                 let m = subModelAfterCreate
                 if(mPropArr.subModels) {
-                    // debugger
-                    // return repos.addressRepo.create({...subModel.factAddress}).then((adres) => {
-                    //     let a = m
-                    //     subModelAfterCreate.factAddressId = adres.id
-                    //     return subModelAfterCreate.save()
-                    //     debugger5
-                    // })
                     return update(subModelAfterCreate, mPropArr.subModels,subModel,repos)
                 }              
             });
@@ -104,8 +96,6 @@ export function subModelUpdateOrCreateByid(mPropArr, repos, clientDto) {
 
 export function updateOnePropCallBackOld(model: Model, propsArr: multiArr[], clientDto, repos) {
     return function (propElement: multiArr) {
-
-
         if (clientDto[propElement.propName] === null) {
             return repos[propElement.repo].destroy({
                 where: {
@@ -125,7 +115,6 @@ export function updateOnePropCallBackOld(model: Model, propsArr: multiArr[], cli
             return model.save()
         }
     }
-
 }
 export function updateOnePropCallBack2(model: Model, propsArr: multiArr[], clientDto, repos) {
     return function (propElement: multiArr) {
@@ -147,12 +136,6 @@ export function updateOnePropCallBack2(model: Model, propsArr: multiArr[], clien
                     delete modelData.id
                     subModel.set(modelData);
                     return subModel.save();
-                    // try {
-                    //     subModel.set(modelData);
-                    //     return subModel.save();
-                    // } catch (e) {
-                    //     debugger
-                    // }
                 })
 
         } else if (
@@ -171,16 +154,11 @@ export function updateOnePropCallBack2(model: Model, propsArr: multiArr[], clien
             return repos[propElement.repo]
                 .create(modelData)
                 .then((newAddress) => {
-                    // if(propElement.propName === 'factAddress') {
-                    //     debugger
-                    // }
                     model[propElement.propName + 'Id'] = newAddress.id
                     return model.save()
                 })
-
         }
     }
-
 }
 
 
@@ -200,5 +178,23 @@ export function getLikeOrArray(searchString, strAtrr, Op){
                 [Op.like]:`%${searchString}%`
             }
         }
+    })
+}
+
+
+export function validateSort(model, getClientDto: FindClientDto): void {
+    if (!!getClientDto.sort) {
+        const attrs = model.rawAttributes
+        getClientDto.sort.forEach((sortEl) => {
+            if (!attrs[sortEl.field]) {
+                throw new HttpException(`${sortEl.field} - такого поля в модели Client не существует`, HttpStatus.BAD_REQUEST)
+            }
+        })
+    }
+}
+
+export function getSortQuery(sort: SortByDto[]) {
+    return sort.map((sortEl) => {
+        return [sortEl.field, sortEl.sortDir]
     })
 }

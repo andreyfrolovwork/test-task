@@ -24,8 +24,7 @@ import { Job } from "./clients/job.table";
             database: process.env.POSTGRES_DB,
             models: [Client, Passport, Child, Job, Address, Communication],
             autoLoadModels: true,
-            synchronize:true,
-            //force:true
+            synchronize:true,       
         }),         
         ClientModule
     ]

@@ -1,54 +1,12 @@
-import { BelongsTo, Column, DataType, DefaultScope, ForeignKey, HasMany, IsUUID, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, DefaultScope, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Passport } from "./passport.table";
 import { Child } from "./child.table";
 import { Address } from "./address.table";
 import { Communication } from "./communication.table";
-import tables from "./config";
+import tables from "../config";
 import { Job } from "./job.table";
 import { literal } from "sequelize";
 import { CreateClientDto } from "./dto/create-client.dto";
-
-interface ClientCreationAttr {
-    id: string;
-
-    name: string;
-
-    surname: string;
-
-    patronymic: string;
-
-    dob: Date;
-
-    children?: Child[];
-
-    documentIds: Array<number | string>
-
-    passportId: string;
-
-    passport: Passport
-
-    livingAddressId?: string;
-
-    livingAddress: Address
-
-    regAddressId?: string;
-
-    regAddress: Address
-
-    jobs: Job[];
-
-    readonly curWorkExp: number;
-
-    typeEducation: string;
-
-    monIncome: number;
-
-    monExpenses: number;
-
-    communication: Communication[];
-
-    spouse: number;
-}
 
 @DefaultScope(() => ({
     include: {
@@ -117,7 +75,6 @@ export class Client extends Model<Client, CreateClientDto> {
         type: DataType.ENUM,
         values: ['secondary', 'secondarySpecial', 'incompleteHigher', 'higher', 'twoOrMoreHigher', 'academicDegree'],
         allowNull: true,
-        //defaultValue: null 
     })
     typeEducation: string;
 
@@ -130,8 +87,13 @@ export class Client extends Model<Client, CreateClientDto> {
     @HasMany(() => Communication)
     communication: Communication[];
 
-    @Column({ type: DataType.UUID, allowNull: true, })
-    spouse: string;
+    
+    // @ForeignKey(() => Client)
+    // @Column({ type: DataType.UUID })
+    // spouseId: number;
+
+    // @BelongsTo(() => Client, { onDelete: "no action", foreignKey: "spouseId" })
+    // spouse: Client
 
 
 }

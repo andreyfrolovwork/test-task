@@ -32,7 +32,6 @@ export class CreateClientDto {
 
     @ApiProperty({example: '10.10.1994', description: 'Дата рождения'})
     @IsOptional()
-    //@IsString({message:'dob - должно быть строкой'})
     @Validate(DateValidator, {
         message: 'dob должна быть датой',
       })
@@ -86,7 +85,6 @@ export class CreateClientDto {
     @IsArray({message:"jobs - должен быть массивом"})        
     @ValidateNested({ each: true, message:"jobs - массив должен содержать сущности [job]" })
     @Type(() => CreateJobDto)
-    //@IsArray({message:"jobs - должен быть массивом"})
     readonly jobs?: Job[];
 
     @ApiProperty({example: '10', description: 'На текущем месте работы стаж'})

@@ -1,26 +1,8 @@
 import { Column, DataType, DefaultScope, Model, Table } from "sequelize-typescript";
-import tables from "./config";
+import tables from "../config";
 import { literal } from "sequelize";
 import { CreateAddressDto } from "./dto/create-address.dto";
 
-export interface AddressCreationAttr {
-    id?: number;
-
-    zipCode?: string;
-
-    country?: string;
-
-    region?: string;
-
-    city?: string;
-
-    street?: string;
-
-    house?: string;
-
-    apartment?: string;
-
-}
 
 @DefaultScope(() => ({
     attributes: {

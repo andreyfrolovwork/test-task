@@ -18,10 +18,8 @@ async function start(){
 
     app.useGlobalPipes(new ValidationPipe())
 
-
     await app.listen(PORT, () => {console.log(`Application started on port = ${PORT}`)})
-}
- 
+} 
 
 start()
 

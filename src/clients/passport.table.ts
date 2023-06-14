@@ -1,20 +1,7 @@
 import { Column, DataType, DefaultScope, Model, Table } from "sequelize-typescript";
-import tables from "./config";
+import tables from "../config";
 import { literal } from "sequelize";
 import { CreatePassportDto } from "./dto/create-passport.dto";
-
-export interface PassportCreationAttr {
-    id: string;
-
-    series: string;
-
-    number: string;
-
-    giver: string;
-
-    dateIssued: Date;
-
-}
 
 @DefaultScope(() => ({
     attributes: {

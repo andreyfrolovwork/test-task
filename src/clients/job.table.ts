@@ -1,33 +1,9 @@
 import { BelongsTo, Column, DataType, DefaultScope, ForeignKey, IsUUID, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import { Client } from "./client.table";
-import tables from "./config";
+import tables from "../config";
 import { literal } from "sequelize";
 import { Address } from "./address.table";
 import { CreateJobDto } from "./dto/create-job-dto";
-
-export interface JobCreationAttr {
-    type:string;
-
-    dateEmp: Date;
-
-    dateDismissal: Date;
-
-    monIncome: number;  
-
-    tin: string;
-
-    factAddressId: string;
-
-    factAddress: Address
-
-    jurAddressId: string;
-
-    jurAddress: Address
-    
-    phoneNumber: string;
-
-    clientId: string;
-}
 
 @DefaultScope(() => ({
     attributes: {        

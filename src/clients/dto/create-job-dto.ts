@@ -30,6 +30,7 @@ export class CreateJobDto {
   @Validate(DateValidator, {
     message: 'dateDismissal должна быть датой',
   })
+  readonly dateDismissal?:Date;
 
   @ApiProperty({example:'55.55',description: 'Доход в месяц c `масштабом(scale) = 2'})
   @IsOptional()
